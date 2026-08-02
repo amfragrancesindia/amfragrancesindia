@@ -468,4 +468,3 @@ enum FragranceNoteType {
   MIDDLE
   BASE
 }
-
