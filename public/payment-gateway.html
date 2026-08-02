@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMFRAGRANCESINDIA - Payment Gateway</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #A89F91; min-height: 100vh; }
+    .serif { font-family: 'Playfair Display', serif; }
+    .gold { color: #D4AF37; }
+    .bg-gold { background-color: #D4AF37; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    .header { background: #0D0D0D; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; }
+    .header-content { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 24px; color: #D4AF37; letter-spacing: 0.15em; }
+    .secure-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6B6B6B; }
+    .secure-badge svg { color: #D4AF37; }
+
+    /* Order Summary */
+    .order-summary { background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .order-summary h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: #F5F5F0; margin-bottom: 16px; }
+    .order-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .order-item:last-child { border-bottom: none; }
+    .order-item img { width: 60px; height: 80px; object-fit: cover; border-radius: 8px; }
+    .order-totals { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+    .total-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+    .total-row.final { font-size: 18px; font-weight: 600; color: #D4AF37; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+    /* Payment Methods */
+    .payment-methods { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+    .payment-method { background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .payment-method:hover, .payment-method.selected { border-color: #D4AF37; background: rgba(212,175,55,0.05); }
+    .payment-method.selected { box-shadow: 0 0 20px rgba(212,175,55,0.1); }
+    .payment-method .icon { font-size: 32px; margin-bottom: 8px; }
+    .payment-method .label { font-size: 14px; font-weight: 500; color: #F5F5F0; }
+
+    /* UPI Section */
+    .upi-section { background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin: 20px 0; display: none; }
+    .upi-section.visible { display: block; }
+    .upi-apps { display: flex; gap: 16px; margin: 16px 0; justify-content: center; }
+    .upi-app { padding: 12px 24px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+    .upi-app:hover, .upi-app.selected { border-color: #D4AF37; }
+
+    /* Cards Section */
+    .cards-section { background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin: 20px 0; display: none; }
+    .cards-section.visible { display: block; }
+    .card-preview { background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.1); }
+    .card-chip { width: 40px; height: 30px; background: linear-gradient(135deg, #D4AF37, #B8960C); border-radius: 6px; margin-bottom: 20px; }
+    .card-number { font-size: 20px; letter-spacing: 4px; color: #F5F5F0; margin-bottom: 16px; font-family: monospace; }
+    .card-details { display: flex; gap: 32px; }
+    .card-field-label { font-size: 10px; text-transform: uppercase; color: #6B6B6B; margin-bottom: 4px; letter-spacing: 1px; }
+    .card-field-value { font-size: 14px; color: #F5F5F0; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; color: #6B6B6B; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input { width: 100%; padding: 14px 16px; background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #F5F5F0; font-size: 15px; transition: border-color 0.3s; }
+    .form-input:focus { outline: none; border-color: #D4AF37; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Net Banking */
+    .bank-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+    .bank-item { padding: 16px; background: #0A0A0A; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; transition: all 0.3s; }
+    .bank-item:hover, .bank-item.selected { border-color: #D4AF37; }
+
+    /* Pay Button */
+    .pay-button { width: 100%; padding: 18px; background: #D4AF37; color: #0A0A0A; border: none; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 24px; }
+    .pay-button:hover { background: #B8960C; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(212,175,55,0.3); }
+    .pay-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* COD */
+    .cod-section { background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin: 20px 0; text-align: center; }
+    .cod-info { padding: 16px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2); border-radius: 8px; margin-top: 16px; }
+
+    /* Success */
+    .success-overlay { position: fixed; inset: 0; background: rgba(10,10,10,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .success-overlay.visible { display: flex; }
+    .success-content { text-align: center; padding: 48px; }
+    .success-icon { width: 80px; height: 80px; background: rgba(212,175,55,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 40px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .payment-methods { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">AMFRAGRANCESINDIA</div>
+        <div class="secure-badge">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span>Secure Payment Gateway</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 400px; gap: 40px; padding: 40px 0;">
+      <!-- Left Column: Payment -->
+      <div>
+        <h2 class="serif" style="font-size: 28px; color: #F5F5F0; margin-bottom: 8px;">Payment Method</h2>
+        <p style="font-size: 14px; margin-bottom: 24px;">Choose your preferred payment method</p>
+
+        <!-- Payment Methods Grid -->
+        <div class="payment-methods">
+          <div class="payment-method selected" data-method="upi" onclick="selectMethod(this, 'upi')">
+            <div class="icon">📱</div>
+            <div class="label">UPI</div>
+          </div>
+          <div class="payment-method" data-method="cards" onclick="selectMethod(this, 'cards')">
+            <div class="icon">💳</div>
+            <div class="label">Cards</div>
+          </div>
+          <div class="payment-method" data-method="netbanking" onclick="selectMethod(this, 'netbanking')">
+            <div class="icon">🏦</div>
+            <div class="label">Net Banking</div>
+          </div>
+          <div class="payment-method" data-method="wallet" onclick="selectMethod(this, 'wallet')">
+            <div class="icon">👛</div>
+            <div class="label">Wallets</div>
+          </div>
+          <div class="payment-method" data-method="emi" onclick="selectMethod(this, 'emi')">
+            <div class="icon">📊</div>
+            <div class="label">EMI</div>
+          </div>
+          <div class="payment-method" data-method="cod" onclick="selectMethod(this, 'cod')">
+            <div class="icon">💵</div>
+            <div class="label">Cash on Delivery</div>
+          </div>
+        </div>
+
+        <!-- UPI Section -->
+        <div id="upi-section" class="upi-section visible">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 16px;">Pay with UPI</h3>
+          <div class="upi-apps">
+            <div class="upi-app selected" onclick="selectUpiApp(this)">📲 Google Pay</div>
+            <div class="upi-app" onclick="selectUpiApp(this)">📲 PhonePe</div>
+            <div class="upi-app" onclick="selectUpiApp(this)">📲 Paytm</div>
+            <div class="upi-app" onclick="selectUpiApp(this)">📲 BHIM</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">UPI ID</label>
+            <input type="text" class="form-input" placeholder="yourname@upi" value="priya@paytm">
+          </div>
+        </div>
+
+        <!-- Cards Section -->
+        <div id="cards-section" class="cards-section">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 16px;">Card Details</h3>
+          <div class="card-preview">
+            <div class="card-chip"></div>
+            <div class="card-number" id="card-number-display">•••• •••• •••• ••••</div>
+            <div class="card-details">
+              <div>
+                <div class="card-field-label">Card Holder</div>
+                <div class="card-field-value" id="card-name-display">YOUR NAME</div>
+              </div>
+              <div>
+                <div class="card-field-label">Expires</div>
+                <div class="card-field-value" id="card-expiry-display">MM/YY</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Card Number</label>
+            <input type="text" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" id="card-number" oninput="formatCardNumber(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Card Holder Name</label>
+            <input type="text" class="form-input" placeholder="John Doe" id="card-name" oninput="document.getElementById('card-name-display').textContent = this.value.toUpperCase() || 'YOUR NAME'">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Expiry Date</label>
+              <input type="text" class="form-input" placeholder="MM/YY" maxlength="5" id="card-expiry" oninput="formatExpiry(this)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">CVV</label>
+              <input type="password" class="form-input" placeholder="•••" maxlength="4">
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 16px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span style="font-size: 12px; color: #6B6B6B;">Your payment information is encrypted and secure</span>
+          </div>
+        </div>
+
+        <!-- Net Banking Section -->
+        <div id="netbanking-section" class="cards-section">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 16px;">Select Bank</h3>
+          <div class="bank-list">
+            <div class="bank-item selected" onclick="selectBank(this)">State Bank of India</div>
+            <div class="bank-item" onclick="selectBank(this)">HDFC Bank</div>
+            <div class="bank-item" onclick="selectBank(this)">ICICI Bank</div>
+            <div class="bank-item" onclick="selectBank(this)">Axis Bank</div>
+            <div class="bank-item" onclick="selectBank(this)">Kotak Mahindra</div>
+            <div class="bank-item" onclick="selectBank(this)">Punjab National Bank</div>
+            <div class="bank-item" onclick="selectBank(this)">Bank of Baroda</div>
+            <div class="bank-item" onclick="selectBank(this)">Canara Bank</div>
+          </div>
+        </div>
+
+        <!-- Wallet Section -->
+        <div id="wallet-section" class="cards-section">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 16px;">Select Wallet</h3>
+          <div class="bank-list">
+            <div class="bank-item selected" onclick="selectWallet(this)">Paytm Wallet</div>
+            <div class="bank-item" onclick="selectWallet(this)">PhonePe Wallet</div>
+            <div class="bank-item" onclick="selectWallet(this)">Amazon Pay</div>
+            <div class="bank-item" onclick="selectWallet(this)">MobiKwik</div>
+          </div>
+        </div>
+
+        <!-- EMI Section -->
+        <div id="emi-section" class="cards-section">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 16px;">EMI Options</h3>
+          <div class="bank-list">
+            <div class="bank-item" onclick="selectEmi(this)">3 Months - No Interest</div>
+            <div class="bank-item selected" onclick="selectEmi(this)">6 Months - No Interest</div>
+            <div class="bank-item" onclick="selectEmi(this)">9 Months - 12% p.a.</div>
+            <div class="bank-item" onclick="selectEmi(this)">12 Months - 12% p.a.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Select Bank for EMI</label>
+            <div class="bank-list">
+              <div class="bank-item selected" onclick="selectEmiBank(this)">HDFC</div>
+              <div class="bank-item" onclick="selectEmiBank(this)">ICICI</div>
+              <div class="bank-item" onclick="selectEmiBank(this)">SBI</div>
+              <div class="bank-item" onclick="selectEmiBank(this)">AXIS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COD Section -->
+        <div id="cod-section" class="cod-section" style="display: none;">
+          <div style="font-size: 48px; margin-bottom: 16px;">💵</div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 20px; color: #F5F5F0; margin-bottom: 8px;">Cash on Delivery</h3>
+          <p style="font-size: 14px; color: #6B6B6B; margin-bottom: 16px;">Pay when you receive your order</p>
+          <div class="cod-info">
+            <p style="font-size: 13px; color: #D4AF37;">Additional ₹40 COD charges apply</p>
+            <p style="font-size: 12px; color: #6B6B6B; margin-top: 8px;">Please keep exact change ready</p>
+          </div>
+        </div>
+
+        <!-- Pay Button -->
+        <button class="pay-button" id="pay-button" onclick="processPayment()">
+          Pay ₹12,45,678
+        </button>
+
+        <!-- Trust Badges -->
+        <div style="display: flex; justify-content: center; gap: 32px; margin-top: 32px; padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.05);">
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔒</div>
+            <div style="font-size: 11px; color: #6B6B6B;">SSL Secured</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🛡️</div>
+            <div style="font-size: 11px; color: #6B6B6B;">PCI Compliant</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 4px;">✓</div>
+            <div style="font-size: 11px; color: #6B6B6B;">256-bit Encryption</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 4px;">🔒</div>
+            <div style="font-size: 11px; color: #6B6B6B;">Razorpay Secured</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Order Summary -->
+      <div>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div class="order-item">
+            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=100&q=80" alt="Royal Oud">
+            <div style="flex: 1;">
+              <div style="font-size: 14px; color: #F5F5F0; font-weight: 500;">Royal Oud - Eau de Parfum</div>
+              <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Qty: 1 | Size: 100ml</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 14px; color: #D4AF37; font-weight: 500;">₹12,999</div>
+            </div>
+          </div>
+          <div class="order-item">
+            <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=100&q=80" alt="Saffron Elixir">
+            <div style="flex: 1;">
+              <div style="font-size: 14px; color: #F5F5F0; font-weight: 500;">Saffron Elixir - Eau de Parfum</div>
+              <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Qty: 1 | Size: 100ml</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 14px; color: #D4AF37; font-weight: 500;">₹7,499</div>
+            </div>
+          </div>
+          <div class="order-totals">
+            <div class="total-row"><span style="color: #6B6B6B;">Subtotal</span><span style="color: #F5F5F0;">₹20,498</span></div>
+            <div class="total-row"><span style="color: #6B6B6B;">Discount</span><span style="color: #22C55E;">-₹2,500</span></div>
+            <div class="total-row"><span style="color: #6B6B6B;">Shipping</span><span style="color: #22C55E;">FREE</span></div>
+            <div class="total-row final"><span>Total</span><span class="gold">₹17,998</span></div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div style="background: #111111; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 24px; margin-top: 20px;">
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 18px; color: #F5F5F0; margin-bottom: 12px;">Shipping Address</h3>
+          <p style="font-size: 14px; color: #F5F5F0; font-weight: 500;">Priya Sharma</p>
+          <p style="font-size: 13px; color: #6B6B6B; margin-top: 4px;">123 Marine Drive, Nariman Point</p>
+          <p style="font-size: 13px; color: #6B6B6B;">Mumbai, Maharashtra 400021</p>
+          <p style="font-size: 13px; color: #6B6B6B;">Phone: +91 98765 43210</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Overlay -->
+  <div id="success-overlay" class="success-overlay">
+    <div class="success-content">
+      <div class="success-icon">✓</div>
+      <h2 class="serif" style="font-size: 32px; color: #D4AF37; margin-bottom: 16px;">Payment Successful!</h2>
+      <p style="font-size: 16px; color: #F5F5F0; margin-bottom: 8px;">Thank you for your order</p>
+      <p style="font-size: 14px; color: #6B6B6B; margin-bottom: 32px;">Order ID: AMF-ABC123</p>
+      <button onclick="location.reload()" style="padding: 14px 32px; background: #D4AF37; color: #0A0A0A; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentMethod = 'upi';
+
+    function selectMethod(el, method) {
+      currentMethod = method;
+      document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+      el.classList.add('selected');
+
+      // Hide all sections
+      document.querySelectorAll('.upi-section, .cards-section, .cod-section, #wallet-section, #emi-section').forEach(s => {
+        s.classList.remove('visible');
+        s.style.display = 'none';
+      });
+
+      // Show selected
+      const sectionId = method === 'cod' ? 'cod-section' : method === 'netbanking' ? 'netbanking-section' : method === 'wallet' ? 'wallet-section' : method === 'emi' ? 'emi-section' : method === 'cards' ? 'cards-section' : 'upi-section';
+      const section = document.getElementById(sectionId);
+      if (section) { section.style.display = 'block'; section.classList.add('visible'); }
+    }
+
+    function selectUpiApp(el) { document.querySelectorAll('.upi-app').forEach(a => a.classList.remove('selected')); el.classList.add('selected'); }
+    function selectBank(el) { document.querySelectorAll('#netbanking-section .bank-item').forEach(b => b.classList.remove('selected')); el.classList.add('selected'); }
+    function selectWallet(el) { document.querySelectorAll('#wallet-section .bank-item').forEach(w => w.classList.remove('selected')); el.classList.add('selected'); }
+    function selectEmi(el) { document.querySelectorAll('#emi-section .bank-item').forEach(e => e.classList.remove('selected')); el.classList.add('selected'); }
+    function selectEmiBank(el) { document.querySelectorAll('#emi-section .bank-item').forEach(e => e.classList.remove('selected')); el.classList.add('selected'); }
+
+    function formatCardNumber(input) {
+      let value = input.value.replace(/\s/g, '').replace(/\D/g, '');
+      let formatted = value.match(/.{1,4}/g);
+      input.value = formatted ? formatted.join(' ') : '';
+      document.getElementById('card-number-display').textContent = input.value || '•••• •••• •••• ••••';
+    }
+
+    function formatExpiry(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length >= 2) value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      input.value = value;
+      document.getElementById('card-expiry-display').textContent = input.value || 'MM/YY';
+    }
+
+    function processPayment() {
+      const btn = document.getElementById('pay-button');
+      btn.disabled = true;
+      btn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Processing...</span>';
+
+      // Simulate payment processing
+      setTimeout(() => {
+        document.getElementById('success-overlay').classList.add('visible');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
