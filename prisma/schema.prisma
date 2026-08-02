@@ -7,11 +7,6 @@ seed {
 }
 }
 
-  provider = "prisma-migrate"
-}
-
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
