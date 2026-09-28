@@ -1,194 +1,63 @@
-# 🧴 AMFRAGRANCESINDIA - Luxury Perfume E-Commerce Platform
+# AM Fragrances — online store
 
-> **Enterprise-grade luxury perfume e-commerce platform built with Next.js 15, TypeScript, and Tailwind CSS.**
+The storefront for **AM Fragrances India**: luxury eaux de parfum, attars and perfume oils.
+Built with Next.js 15 (App Router), TypeScript, Tailwind CSS, Prisma and Auth.js, and hosted on
+Cloudflare Workers with a Cloudflare D1 database.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-cyan)](https://tailwindcss.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-5-green)](https://www.prisma.io/)
-[![Vercel](https://img.shields.io/badge/Vercel-Deploy-black)](https://vercel.com/)
+## What's included
 
-## ✨ Features
+- **Storefront** — home page, product listing with filters/sort/search, product pages with size
+  selection, wishlist, cart drawer and cart page, coupon codes, checkout with Cash on Delivery and
+  Razorpay (UPI, cards, net banking, wallets), order confirmation.
+- **Customer accounts** — register, sign in (email/password, optional Google), password reset by
+  email, profile, saved addresses, order history.
+- **Admin panel** (`/admin`) — dashboard, orders (status + tracking), customers, contact messages,
+  newsletter subscribers, product overview. Only users with the `ADMIN` role can open it.
+- **Content** — About, Contact, FAQ, Shipping, Refund, Privacy and Terms pages; sitemap, robots.txt,
+  Open Graph image and structured data for search engines.
 
-### 🎨 Premium Design
-- Luxury fragrance-inspired UI/UX
-- Custom animations & transitions
-- Glassmorphism effects
-- High-end typography (Playfair Display + Inter)
-- Fully responsive design
-- Mobile-first approach
+## Quick start
 
-### 🛍️ Shopping Experience
-- Advanced product catalog
-- Smart search & filters
-- Product comparison
-- Wishlist & cart
-- Coupon system
-- Gift cards
-- Back-in-stock notifications
-
-### 💳 Payments
-- Razorpay integration
-- UPI, Cards, Net Banking
-- Wallets & EMI
-- Secure checkout
-- PCI DSS compliant
-
-### 👤 User Accounts
-- Email & mobile registration
-- OTP verification
-- Social login (Google)
-- Order history
-- Address book
-- Profile management
-
-### ⚙️ Admin Dashboard
-- Product management
-- Order management
-- Customer management
-- Inventory control
-- Coupon management
-- Blog management
-- Analytics & reports
-
-### 📈 Marketing
-- SEO optimized
-- Blog system
-- Email marketing
-- Abandoned cart recovery
-- Referral system
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- PostgreSQL database (Supabase)
-- Razorpay account
-- Resend account (emails)
-
-### Installation
-
-1. **Clone the repository:**
-```bash
-git clone https://github.com/amfrangrances/amfragrancesindia.git
-cd amfragrancesindia
-```
-
-2. **Install dependencies:**
 ```bash
 npm install
+cp .env.example .env.local   # at least AUTH_SECRET
+npm run db:migrate:local     # tables in a local D1 database
+npm run dev                  # http://localhost:3000
 ```
 
-3. **Set up environment variables:**
-```bash
-cp .env.example .env.local
+`npm run preview` runs the real Cloudflare build locally (http://localhost:8787).
+
+## Everyday changes
+
+| To change… | Edit |
+| --- | --- |
+| Products, prices, sizes, stock, descriptions | `src/lib/catalog.ts` |
+| Phone, email, address, shipping fee & free-shipping threshold | `src/lib/site.ts` |
+| Coupon codes | `COUPONS` in `src/lib/pricing.ts` |
+| Product photos | `public/images/am/products/<slug>.webp` (+ `-2`, `-3` for extra views) |
+| Banners | `public/images/am/banners/` |
+| Policy text | `src/app/(shop)/*-policy/page.tsx`, `src/app/(shop)/terms/page.tsx` |
+
+Prices in the catalogue are MRP, inclusive of GST. The server always re-prices the cart from the
+catalogue, so what the browser sends can never change what a customer pays.
+
+## Database and admin account
+
+The tables are defined in `prisma/schema.prisma` and created by the SQL files in `migrations/`.
+To make someone an admin, register with their email and run in the D1 console:
+
+```sql
+UPDATE users SET role = 'ADMIN' WHERE email = 'you@example.com';
 ```
 
-Edit `.env.local` with your credentials.
+## Scripts
 
-4. **Set up database:**
-```bash
-npx prisma migrate deploy
-npx prisma db seed
-```
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Development server (local D1 database) |
+| `npm run preview` | Cloudflare build on the local Workers runtime |
+| `npm run deploy` | Build and deploy from this computer (normally GitHub does this) |
+| `npm run typecheck` | TypeScript check |
+| `npm run db:migrate:local` / `db:migrate:remote` | Apply `migrations/` to the local / live D1 database |
 
-5. **Run development server:**
-```bash
-npm run dev
-```
-
-Visit [http://localhost:3000](http://localhost:3000)
-
-## 📦 Tech Stack
-
-| Category | Technology |
-|----------|-----------|
-| **Frontend** | Next.js 15, React 19, TypeScript |
-| **Styling** | Tailwind CSS |
-| **Database** | PostgreSQL (Supabase) |
-| **ORM** | Prisma |
-| **Authentication** | NextAuth.js v5 |
-| **Payments** | Razorpay |
-| **Email** | Resend |
-| **Hosting** | Vercel |
-| **Storage** | Supabase Storage |
-
-## 📁 Project Structure
-
-```
-am-fragrances/
-├── prisma/
-│   ├── schema.prisma          # Database schema
-│   └── seed.ts                # Initial data
-├── src/
-│   ├── app/                   # Next.js App Router
-│   │   ├── (auth)/           # Authentication pages
-│   │   ├── (shop)/           # Shop pages
-│   │   ├── admin/            # Admin dashboard
-│   │   └── api/              # API routes
-│   ├── components/           # React components
-│   ├── lib/                  # Utilities
-│   └── types/                # TypeScript types
-└── public/                    # Static assets
-```
-
-## 🎨 Design System
-
-### Colors
-- **Primary:** `#0a0a0a` (Rich Black)
-- **Secondary:** `#c9a96e` (Gold)
-- **Accent:** `#f7e7ce` (Champagne)
-- **Background:** `#ffffff` (White)
-
-### Typography
-- **Headings:** Playfair Display (serif)
-- **Body:** Inter (sans-serif)
-
-## 🔒 Security
-
-- ✅ HTTPS enforcement
-- ✅ Secure authentication
-- ✅ CSRF protection
-- ✅ XSS prevention
-- ✅ SQL injection prevention
-- ✅ Rate limiting
-- ✅ OWASP Top 10 mitigation
-
-## 📱 Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 🚀 Deployment
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
-
-**Quick Deploy:**
-1. Push to GitHub
-2. Connect to Vercel
-3. Add environment variables
-4. Deploy!
-
-## 📊 Performance
-
-- ⚡ Optimized build (0 errors)
-- 📦 Optimized bundle sizes
-- 🖼️ Image optimization
-- 🎯 Code splitting
-- 🌐 CDN distribution
-- ⚡ Edge caching
-
-## 📝 License
-
-© 2025 AMFRAGRANCESINDIA. All rights reserved.
-
-## 🤝 Support
-
-For support, email deploy@amfragrancesindia.com
-
----
-
-**Built with ❤️ for AMFRAGRANCESINDIA**
+See [DEPLOYMENT.md](DEPLOYMENT.md) for going live on Cloudflare.

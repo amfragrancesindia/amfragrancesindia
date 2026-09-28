@@ -1,0 +1,29 @@
+// Cloudflare Workers configuration (built with @opennextjs/cloudflare).
+// See DEPLOYMENT.md for how this is connected to GitHub and the D1 database.
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	// Must match the Worker's name in the Cloudflare dashboard.
+	"name": "amfragrancesindia",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-09-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	// Keep the variables and secrets that are set in the Cloudflare dashboard
+	// (AUTH_SECRET, Razorpay keys, ...) when a new version is deployed.
+	"keep_vars": true,
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "amfragrances",
+			// Database ID from Cloudflare → Storage & databases → D1 → amfragrances.
+			"database_id": "04bde57f-b892-481f-8381-a3024b60381d",
+			"migrations_dir": "migrations"
+		}
+	],
+	"observability": {
+		"enabled": true
+	}
+}

@@ -1,70 +1,55 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        luxury: {
-          black: '#0A0A0A',
-          dark: '#111111',
-          darker: '#0D0D0D',
-          light: '#F5F5F0',
-          muted: '#A89F91',
-          secondary: '#C4C0B8',
-        },
-        gold: {
-          500: '#D4AF37',
-          400: '#E5C04B',
-          300: '#F0D060',
-          100: '#FAF0D7',
-        },
+        ink: { DEFAULT: '#0B0B0B', soft: '#1C1916' },
+        brand: { DEFAULT: '#5A4A3A', dark: '#43372B', light: '#7D6B4A' },
+        cream: { DEFAULT: '#FAF8F2', dark: '#F3EEE3' },
+        sand: '#EFE7D8',
+        line: '#E8E1D4',
+        // DEFAULT is slightly deeper than the reference site's #9A7B18 so small
+        // labels meet WCAG AA contrast (4.5:1) on white and cream.
+        gold: { DEFAULT: '#86690F', light: '#C9A961', soft: '#EADBB0' },
+        navy: '#141B34',
+        muted: '#6F665C',
+        success: '#15803D',
+        danger: '#B42318',
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'var(--font-montserrat)', 'sans-serif'],
-        serif: ['var(--font-cormorant)', 'serif'],
-        display: ['var(--font-montserrat)', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'monospace'],
+        sans: ['var(--font-urbanist)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-cormorant)', 'Georgia', 'serif'],
+        logo: ['var(--font-cinzel)', 'Georgia', 'serif'],
+        script: ['var(--font-pinyon)', 'cursive'],
       },
-      animation: {
-        'fade-in': 'fadeIn 0.6s ease-out',
-        'fade-in-up': 'fadeInUp 0.6s ease-out',
-        'slide-in': 'slideIn 0.5s ease-out',
-        'shimmer': 'shimmer 2s infinite',
-        'float': 'float 6s ease-in-out infinite',
+      boxShadow: {
+        card: '0 18px 40px -22px rgba(43, 33, 24, 0.35)',
+        soft: '0 2px 14px rgba(20, 16, 12, 0.07)',
+        header: '0 1px 0 rgba(20, 16, 12, 0.06), 0 8px 24px -16px rgba(20, 16, 12, 0.25)',
+      },
+      maxWidth: {
+        '8xl': '88rem',
       },
       keyframes: {
-        fadeIn: {
+        'fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(18px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
-        fadeInUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        slideIn: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(0)' },
-        },
         shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' },
+          '0%': { backgroundPosition: '-400px 0' },
+          '100%': { backgroundPosition: '400px 0' },
         },
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-      backdropBlur: {
-        xs: '2px',
+      animation: {
+        'fade-up': 'fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'fade-in': 'fade-in 0.6s ease-out both',
+        shimmer: 'shimmer 1.4s linear infinite',
       },
     },
   },

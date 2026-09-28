@@ -1,84 +1,67 @@
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 import type { NextConfig } from 'next';
 
-let withSentryConfig: any = null;
-try {
-  const sentry = require('@sentry/nextjs');
-  withSentryConfig = sentry.withSentryConfig;
-} catch {
-  // Sentry is optional for local development
-}
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+];
+
+// Old URLs that were linked from the previous site (or never existed) are
+// redirected so bookmarks, shared links and search results keep working.
+const legacyRedirects: Array<[string, string]> = [
+  ['/catalog', '/products'],
+  ['/shop', '/products'],
+  ['/favorites', '/wishlist'],
+  ['/account/wishlist', '/wishlist'],
+  ['/checkout/cart', '/cart'],
+  ['/checkout/checkout', '/checkout'],
+  ['/checkout/coupons', '/cart'],
+  ['/checkout/order-confirmation', '/order-success'],
+  ['/auth/login', '/login'],
+  ['/auth/register', '/register'],
+  ['/auth/forgot-password', '/forgot-password'],
+  ['/auth/reset-password', '/reset-password'],
+  ['/faqs', '/faq'],
+  ['/privacy', '/privacy-policy'],
+  ['/shipping', '/shipping-policy'],
+  ['/returns', '/refund-policy'],
+  ['/track-order', '/account/orders'],
+  ['/dashboard', '/admin/dashboard'],
+];
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // A stray package-lock.json in the user profile folder confuses Next's
+  // workspace-root detection; pin it to this project.
+  outputFileTracingRoot: process.cwd(),
   eslint: {
     ignoreDuringBuilds: true,
   },
-
+  // Prisma's generated client has to be bundled as-is for the Workers runtime.
+  serverExternalPackages: ['@prisma/client', '.prisma/client'],
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: '*.amazonaws.com' },
-    ],
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // The product photos are already small WebP files (under 110 KB), so they
+    // are served as they are instead of through an image-resizing service.
+    unoptimized: true,
+    qualities: [75, 82],
   },
-
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-        ],
-      },
-      {
-        source: '/api/(.*)',
-        headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, PUT, DELETE, OPTIONS' },
-          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
-        ],
-      },
-    ];
+    return [{ source: '/(.*)', headers: securityHeaders }];
   },
-
   async redirects() {
-    return [
-      {
-        source: '/shop',
-        destination: '/catalog',
-        permanent: true,
-      },
-    ];
+    return legacyRedirects.map(([source, destination]) => ({ source, destination, permanent: true }));
   },
-
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['framer-motion', 'lucide-react', 'recharts'],
-    scrollRestoration: true,
+    optimizePackageImports: ['framer-motion', 'lucide-react'],
   },
 };
 
-const config = withSentryConfig
-  ? withSentryConfig(nextConfig, {
-      silent: true,
-      org: 'amfragrances',
-      project: 'amfragrances-india',
-    })
-  : nextConfig;
+export default nextConfig;
 
-export default config;
+// Lets `next dev` use the bindings from wrangler.jsonc (the local D1 database).
+initOpenNextCloudflareForDev();
