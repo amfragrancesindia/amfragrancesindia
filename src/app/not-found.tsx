@@ -1,9 +1,9 @@
+import Link from 'next/link';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { ButtonLink } from '@/components/ui/Button';
-import { getBestsellers } from '@/lib/catalog';
+import { SHOP_FILTERS } from '@/lib/catalog';
 
 export default function NotFound() {
   return (
@@ -23,7 +23,17 @@ export default function NotFound() {
             </ButtonLink>
           </div>
         </div>
-        <ProductGrid products={getBestsellers(4)} className="mt-16" />
+        <nav aria-label="Shop by collection" className="mx-auto mt-14 flex max-w-2xl flex-wrap justify-center gap-2">
+          {SHOP_FILTERS.filter((f) => f.key !== 'all').map((f) => (
+            <Link
+              key={f.key}
+              href={`/products?${new URLSearchParams(f.params as Record<string, string>)}`}
+              className="rounded-full border border-line px-4 py-2 text-sm font-medium text-ink/80 transition hover:border-brand hover:text-brand"
+            >
+              {f.label}
+            </Link>
+          ))}
+        </nav>
       </main>
       <Footer />
       <CartDrawer />

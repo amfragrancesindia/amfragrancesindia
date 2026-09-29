@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { products } from '@/lib/catalog';
+import { getStoreProducts } from '@/lib/products';
 import { absoluteUrl } from '@/lib/utils';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Lists the products currently in the database.
+export const dynamic = 'force-dynamic';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const pages: Array<[string, number, MetadataRoute.Sitemap[number]['changeFrequency']]> = [
     ['/', 1, 'weekly'],
@@ -20,11 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ['/privacy-policy', 0.2, 'yearly'],
     ['/terms', 0.2, 'yearly'],
   ];
+  const products = await getStoreProducts();
   return [
     ...pages.map(([path, priority, changeFrequency]) => ({ url: absoluteUrl(path), lastModified: now, changeFrequency, priority })),
     ...products.map((p) => ({
       url: absoluteUrl(`/products/${p.slug}`),
-      lastModified: now,
+      lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
       images: p.images.map((src) => absoluteUrl(src)),

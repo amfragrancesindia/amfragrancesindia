@@ -6,6 +6,7 @@ import { SortSelect } from '@/components/product/SortSelect';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ButtonLink } from '@/components/ui/Button';
 import { SHOP_FILTERS, SORT_OPTIONS, queryProducts } from '@/lib/catalog';
+import { getStoreProducts } from '@/lib/products';
 import { cn } from '@/lib/utils';
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -44,7 +45,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 
 export default async function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
   const { gender, category, q, sort, activeKey } = readParams(await searchParams);
-  const list = queryProducts({ gender, category, q, sort });
+  const list = queryProducts(await getStoreProducts(), { gender, category, q, sort });
   const copy = COPY[activeKey] ?? COPY.all;
 
   const hrefFor = (params: Record<string, string>, keepQuery = true) => {

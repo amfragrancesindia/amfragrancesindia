@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { getBestsellers, queryProducts } from '@/lib/catalog';
+import { getStoreProducts } from '@/lib/products';
 
 export const metadata: Metadata = {
   title: 'Search',
@@ -15,7 +16,9 @@ const SUGGESTIONS = ['Oud', 'Saffron', 'Rose', 'Attar', 'Jasmine', 'Sandalwood',
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
   const raw = (await searchParams).q;
   const q = (typeof raw === 'string' ? raw : '').trim().slice(0, 80);
-  const results = q ? queryProducts({ q }) : [];
+  const products = await getStoreProducts();
+  const results = q ? queryProducts(products, { q }) : [];
+  const popular = getBestsellers(products, 4);
 
   return (
     <div className="container-x pb-20 pt-6 sm:pt-8">
@@ -62,14 +65,14 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           ) : (
             <>
               <p className="mt-2 text-muted">Nothing matched. You might like these bestsellers:</p>
-              <ProductGrid products={getBestsellers(4)} className="mt-6" />
+              <ProductGrid products={popular} className="mt-6" />
             </>
           )}
         </>
       ) : (
         <>
           <h2 className="mt-12 text-xl font-semibold">Popular right now</h2>
-          <ProductGrid products={getBestsellers(4)} className="mt-6" />
+          <ProductGrid products={popular} className="mt-6" />
         </>
       )}
     </div>

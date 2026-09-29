@@ -6,6 +6,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getBestsellers } from '@/lib/catalog';
+import { getStoreProducts } from '@/lib/products';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -21,7 +22,11 @@ const values = [
   { Icon: HandHeart, title: 'Honest luxury', text: 'Clear MRP pricing inclusive of all taxes, secure checkout, cash on delivery and easy returns on sealed products.' },
 ];
 
-export default function AboutPage() {
+// The bestsellers strip comes from the database.
+export const dynamic = 'force-dynamic';
+
+export default async function AboutPage() {
+  const bestsellers = getBestsellers(await getStoreProducts(), 4);
   return (
     <>
       <section className="relative isolate overflow-hidden bg-[#140D08] text-white">
@@ -90,10 +95,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="container-x py-16 sm:py-24">
-        <SectionHeading title="Customer Favourites" action={{ href: '/products', label: 'Shop all' }} />
-        <ProductGrid products={getBestsellers(4)} className="mt-8" />
-      </section>
+      {bestsellers.length > 0 && (
+        <section className="container-x py-16 sm:py-24">
+          <SectionHeading title="Customer Favourites" action={{ href: '/products', label: 'Shop all' }} />
+          <ProductGrid products={bestsellers} className="mt-8" />
+        </section>
+      )}
     </>
   );
 }
