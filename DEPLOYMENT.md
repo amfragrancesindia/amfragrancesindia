@@ -1,19 +1,29 @@
 # Deploying AM Fragrances (Cloudflare Workers + D1)
 
-The site runs on **Cloudflare Workers** (built with `@opennextjs/cloudflare`) and keeps accounts,
-orders and messages in a **Cloudflare D1** database. Once the Worker is connected to the GitHub
-repository, every push to `main` builds and deploys automatically.
+The site runs on **Cloudflare Workers** (built with `@opennextjs/cloudflare`). Products, accounts,
+orders and messages live in a **Cloudflare D1** database, and product photos uploaded in the admin
+panel live in **Cloudflare R2**. Once the Worker is connected to the GitHub repository, every push
+to `main` builds and deploys automatically.
 
 **Plan:** use the **Workers Paid** plan ($5/month). Signing in and registering hash passwords, which
 takes a few hundred milliseconds of CPU; the free plan allows 10 ms per request. The Worker itself
-is about 2.5 MB compressed (free limit 3 MB, paid 10 MB).
+is about 2.6 MB compressed (free limit 3 MB, paid 10 MB).
 
 ## 1. Database (once)
 
 1. Cloudflare dashboard → **Storage & databases → D1 SQL Database → Create**, name it `amfragrances`.
 2. Copy its **Database ID** into `wrangler.jsonc` (`d1_databases → database_id`) and commit.
-3. Open the database → **Console**, paste everything from `migrations/0001_init.sql` and run it.
-   (From a computer with Wrangler logged in: `npm run db:migrate:remote` does the same.)
+3. Open the database → **Console** and run each file in `migrations/` in order (`0001_init.sql`,
+   then `0002_products.sql`). The console runs everything as one line, so leave out the `--`
+   comment lines when pasting. (From a computer with Wrangler logged in, `npm run db:migrate:remote`
+   applies them all.)
+
+## 1b. Photo storage (once, before the first deploy that includes it)
+
+Cloudflare dashboard → **Storage & databases → R2 Object Storage → Create bucket**, name it
+`amfragrances-media` (location: Automatic). R2 is free up to 10 GB; Cloudflare may ask you to
+activate R2 first. The Worker reaches it through the `MEDIA` binding in `wrangler.jsonc`. A deploy
+fails while the bucket doesn't exist.
 
 ## 2. Worker (once)
 
@@ -62,6 +72,16 @@ UPDATE users SET role = 'ADMIN' WHERE email = 'you@example.com';
 ```
 
 Open `/admin`.
+
+## 4b. Products
+
+Products are managed in **Admin → Products**: add and edit products, sizes and prices (with MRP),
+stock, photos, notes, labels, the home-page featured product, drafts and SEO text. Changes are live
+immediately.
+
+The first time, the product list is empty: click **Import the 14 starter products** to load the
+original range (safe to click again — it skips products that already exist). Deleting a product
+never changes past orders; they keep their own copy of the name, size and price.
 
 ## 5. Custom domain
 

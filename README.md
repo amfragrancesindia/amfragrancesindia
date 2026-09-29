@@ -12,7 +12,9 @@ Cloudflare Workers with a Cloudflare D1 database.
 - **Customer accounts** — register, sign in (email/password, optional Google), password reset by
   email, profile, saved addresses, order history.
 - **Admin panel** (`/admin`) — dashboard, orders (status + tracking), customers, contact messages,
-  newsletter subscribers, product overview. Only users with the `ADMIN` role can open it.
+  newsletter subscribers, and a full product manager: add/edit/delete products, sizes, prices and
+  MRP, stock, photo upload and ordering (stored in Cloudflare R2), notes, labels, the featured
+  product, drafts and SEO text. Only users with the `ADMIN` role can open it.
 - **Content** — About, Contact, FAQ, Shipping, Refund, Privacy and Terms pages; sitemap, robots.txt,
   Open Graph image and structured data for search engines.
 
@@ -29,17 +31,17 @@ npm run dev                  # http://localhost:3000
 
 ## Everyday changes
 
-| To change… | Edit |
+| To change… | Where |
 | --- | --- |
-| Products, prices, sizes, stock, descriptions | `src/lib/catalog.ts` |
+| Products, prices, sizes, stock, photos, notes, featured product | **Admin → Products** (no code change) |
 | Phone, email, address, shipping fee & free-shipping threshold | `src/lib/site.ts` |
 | Coupon codes | `COUPONS` in `src/lib/pricing.ts` |
-| Product photos | `public/images/am/products/<slug>.webp` (+ `-2`, `-3` for extra views) |
 | Banners | `public/images/am/banners/` |
 | Policy text | `src/app/(shop)/*-policy/page.tsx`, `src/app/(shop)/terms/page.tsx` |
 
-Prices in the catalogue are MRP, inclusive of GST. The server always re-prices the cart from the
-catalogue, so what the browser sends can never change what a customer pays.
+Prices include GST. The server always re-prices the cart from the database, so what the browser
+sends can never change what a customer pays. The original 14 products are kept in
+`src/lib/starter-products.ts` for the admin panel's one-click import.
 
 ## Database and admin account
 

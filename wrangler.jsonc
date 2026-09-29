@@ -23,6 +23,14 @@
 			"migrations_dir": "migrations"
 		}
 	],
+	// Product photos uploaded in the admin panel. Create this bucket first:
+	// Cloudflare → Storage & databases → R2 → Create bucket.
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "amfragrances-media"
+		}
+	],
 	"observability": {
 		"enabled": true
 	}

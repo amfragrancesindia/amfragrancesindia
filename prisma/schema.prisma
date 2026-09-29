@@ -1,8 +1,8 @@
 // Database for the store: Cloudflare D1 (SQLite), reached through the
 // @prisma/adapter-d1 driver adapter (see src/lib/prisma.ts).
 //
-// Products, prices and coupons live in code (src/lib/catalog.ts and
-// src/lib/pricing.ts); the database only stores accounts, orders and messages.
+// Products are managed in the admin panel (/admin/products) and stored here.
+// Coupons live in code (src/lib/pricing.ts).
 //
 // After changing this file, create a new SQL file in /migrations (see
 // DEPLOYMENT.md) and run it on D1.
@@ -135,6 +135,41 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+// A product and everything about it lives in one row: sizes, photos and notes
+// are JSON columns, so saving a product is a single write (D1 has no
+// transactions, and a half-saved product must never reach the store).
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  tagline        String   @default("")
+  description    String   @default("")
+  gender         String   @default("unisex")
+  category       String   @default("perfume")
+  concentration  String   @default("")
+  /// Photo URLs in display order (the first one is the main photo).
+  images         Json
+  /// [{ id, size, price, mrp, inStock }] — `id` is what carts and orders reference.
+  variants       Json
+  /// { top: string[], heart: string[], base: string[] }
+  notes          Json
+  longevity      String   @default("")
+  sillage        String   @default("")
+  seasons        Json
+  occasions      Json
+  badge          String?
+  bestseller     Boolean  @default(false)
+  featured       Boolean  @default(false)
+  published      Boolean  @default(true)
+  releasedAt     DateTime @default(now()) @map("released_at")
+  seoTitle       String?  @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("products")
 }
 
 model NewsletterSubscriber {
