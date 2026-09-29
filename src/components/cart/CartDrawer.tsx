@@ -8,14 +8,23 @@ import { Drawer } from '@/components/layout/Drawer';
 import { ButtonLink } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { formatPrice } from '@/lib/utils';
+import { CatalogErrorNotice } from './CatalogErrorNotice';
 import { FreeShippingMeter } from './FreeShippingMeter';
 
 export function CartDrawer() {
-  const { drawerOpen, closeDrawer, lines, totals, updateQuantity, removeItem } = useCart();
+  const { drawerOpen, closeDrawer, hydrated, catalogError, itemCount, lines, totals, updateQuantity, removeItem } = useCart();
 
   return (
-    <Drawer open={drawerOpen} onClose={closeDrawer} side="right" title={`Your Cart (${totals.itemCount})`}>
-      {lines.length === 0 ? (
+    <Drawer open={drawerOpen} onClose={closeDrawer} side="right" title={`Your Cart (${hydrated ? totals.itemCount : itemCount})`}>
+      {!hydrated ? (
+        <div className="space-y-4 px-5 py-5" aria-busy>
+          {[0, 1].map((i) => (
+            <div key={i} className="skeleton h-24" />
+          ))}
+        </div>
+      ) : catalogError ? (
+        <CatalogErrorNotice className="px-6" />
+      ) : lines.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
           <span className="grid h-16 w-16 place-items-center rounded-full bg-cream">
             <ShoppingBag className="h-7 w-7 text-brand" />

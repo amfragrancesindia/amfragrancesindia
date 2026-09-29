@@ -1,8 +1,11 @@
 // Cart pricing shared by the browser (to display totals) and the server (to
-// charge them). The server always re-prices from the catalogue, so a
+// charge them). The server always re-prices from the database, so a
 // tampered cart in localStorage can never change what a customer pays.
-import { getProduct } from './catalog';
+import type { Product } from './catalog';
 import { site } from './site';
+
+/** Finds a product by slug (the catalogue in the browser, the database on the server). */
+export type ProductLookup = (slug: string) => Product | undefined;
 
 export const MAX_QTY_PER_LINE = 10;
 export const GST_RATE = 0.18;
@@ -32,7 +35,7 @@ export const lineKey = (slug: string, variantId: string) => `${slug}:${variantId
 export const clampQuantity = (n: number) =>
   Math.min(MAX_QTY_PER_LINE, Math.max(1, Math.floor(Number.isFinite(n) ? n : 1)));
 
-export function priceCart(input: CartLineInput[]): { lines: PricedLine[]; rejected: CartLineInput[] } {
+export function priceCart(input: CartLineInput[], getProduct: ProductLookup): { lines: PricedLine[]; rejected: CartLineInput[] } {
   const merged = new Map<string, PricedLine>();
   const rejected: CartLineInput[] = [];
   for (const item of input) {

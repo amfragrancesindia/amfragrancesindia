@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Search } from 'lucide-react';
+import { useCart } from '@/components/providers/CartProvider';
 import { queryProducts, startingVariant } from '@/lib/catalog';
 import { formatPrice } from '@/lib/utils';
 import { Drawer } from './Drawer';
@@ -13,9 +14,13 @@ const POPULAR = ['Oud', 'Saffron', 'Rose', 'Attar', 'Jasmine', 'Gift set'];
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const router = useRouter();
+  const { products } = useCart();
   const [query, setQuery] = useState('');
   const deferred = useDeferredValue(query);
-  const results = useMemo(() => (deferred.trim() ? queryProducts({ q: deferred }).slice(0, 6) : []), [deferred]);
+  const results = useMemo(
+    () => (deferred.trim() ? queryProducts(products, { q: deferred }).slice(0, 6) : []),
+    [deferred, products],
+  );
 
   const submit = (q: string) => {
     const term = q.trim();

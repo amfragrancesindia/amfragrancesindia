@@ -4,10 +4,11 @@ import { Heart } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { ButtonLink } from '@/components/ui/Button';
-import { getProduct, type Product } from '@/lib/catalog';
+import { findProduct, type Product } from '@/lib/catalog';
+import { CatalogErrorNotice } from './CatalogErrorNotice';
 
 export function WishlistView() {
-  const { hydrated, wishlist } = useCart();
+  const { hydrated, catalogError, wishlist, products } = useCart();
 
   if (!hydrated) {
     return (
@@ -19,7 +20,9 @@ export function WishlistView() {
     );
   }
 
-  const items = wishlist.map((slug) => getProduct(slug)).filter((p): p is Product => !!p);
+  if (catalogError) return <CatalogErrorNotice className="mt-8" />;
+
+  const items = wishlist.map((slug) => findProduct(products, slug)).filter((p): p is Product => !!p);
 
   if (items.length === 0) {
     return (

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { AlertCircle, Banknote, CreditCard, Lock, ShieldCheck, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
+import { CatalogErrorNotice } from '@/components/cart/CatalogErrorNotice';
 import { CouponForm } from '@/components/cart/CouponForm';
 import { OrderTotals } from '@/components/cart/OrderTotals';
 import { Button, ButtonLink } from '@/components/ui/Button';
@@ -87,7 +88,7 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ cod, online, signedIn, defaultEmail, defaultName }: CheckoutFormProps) {
   const router = useRouter();
-  const { hydrated, lines, totals, clearCart } = useCart();
+  const { hydrated, catalogError, lines, totals, clearCart } = useCart();
   const [form, setForm] = useState<FormState>({
     email: defaultEmail,
     name: defaultName,
@@ -117,6 +118,8 @@ export function CheckoutForm({ cod, online, signedIn, defaultEmail, defaultName 
       </div>
     );
   }
+
+  if (catalogError && !placed) return <CatalogErrorNotice className="mt-8" />;
 
   if (!cod && !online) {
     return (

@@ -7,12 +7,13 @@ import { useCart } from '@/components/providers/CartProvider';
 import { ButtonLink } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { formatPrice } from '@/lib/utils';
+import { CatalogErrorNotice } from './CatalogErrorNotice';
 import { CouponForm } from './CouponForm';
 import { FreeShippingMeter } from './FreeShippingMeter';
 import { OrderTotals } from './OrderTotals';
 
 export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
-  const { hydrated, lines, totals, updateQuantity, removeItem } = useCart();
+  const { hydrated, catalogError, lines, totals, updateQuantity, removeItem } = useCart();
 
   if (!hydrated) {
     return (
@@ -26,6 +27,8 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
       </div>
     );
   }
+
+  if (catalogError) return <CatalogErrorNotice className="mt-8" />;
 
   if (lines.length === 0) {
     return (
