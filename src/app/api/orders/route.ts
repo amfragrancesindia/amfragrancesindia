@@ -5,6 +5,7 @@ import { sendOrderConfirmation, sendOrderNotification, type OrderEmailData } fro
 import { checkoutCapabilities, generateOrderNumber } from '@/lib/orders';
 import { computeTotals, priceCart } from '@/lib/pricing';
 import { prisma } from '@/lib/prisma';
+import { storeLookup } from '@/lib/products';
 import { createRazorpayOrder } from '@/lib/razorpay';
 import { rateLimit, tooManyRequests } from '@/lib/rate-limit';
 import { checkoutSchema, fieldErrors } from '@/lib/validations';
@@ -72,8 +73,15 @@ export async function POST(req: Request) {
     }
   }
 
-  // Prices always come from the catalogue — never from the browser.
-  const { lines, rejected } = priceCart(input.items);
+  // Prices always come from the database — never from the browser.
+  let lookup: Awaited<ReturnType<typeof storeLookup>>;
+  try {
+    lookup = await storeLookup();
+  } catch (error) {
+    console.error('[orders] could not load products', error);
+    return NextResponse.json({ error: 'We could not check prices right now. Please try again in a moment.' }, { status: 503 });
+  }
+  const { lines, rejected } = priceCart(input.items, lookup);
   if (rejected.length > 0 || lines.length === 0) {
     return NextResponse.json(
       { error: 'Some items in your cart are no longer available. Please review your cart and try again.' },
