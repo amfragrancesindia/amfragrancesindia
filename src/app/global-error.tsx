@@ -1,5 +1,7 @@
 'use client';
 
+import { Monogram } from '@/components/layout/Logo';
+
 // Last-resort boundary for errors in the root layout itself.
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
@@ -7,7 +9,9 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
       <body style={{ margin: 0, fontFamily: 'system-ui, sans-serif', background: '#FAF8F2', color: '#1C1916' }}>
         <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center' }}>
           <div>
-            <p style={{ letterSpacing: '0.3em', fontSize: 28, margin: 0 }}>AM</p>
+            <div style={{ width: 64, margin: '0 auto', color: '#9A7536' }}>
+              <Monogram />
+            </div>
             <h1 style={{ fontSize: 24, margin: '16px 0 8px' }}>Something went wrong</h1>
             <p style={{ color: '#6F665C', margin: '0 0 24px' }}>Please refresh the page or try again in a moment.</p>
             <button

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { AdminNav } from '@/components/admin/AdminNav';
+import { Monogram } from '@/components/layout/Logo';
 import { getSessionUser, isAdmin } from '@/lib/auth';
 import { isDatabaseConfigured } from '@/lib/prisma';
 
@@ -22,8 +23,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen bg-cream">
       <header className="border-b border-line bg-white">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/admin/dashboard" className="flex items-baseline gap-3">
-            <span className="font-logo text-xl tracking-[0.25em]">AM</span>
+          <Link href="/admin/dashboard" className="flex items-center gap-3" aria-label="AM Fragrances admin">
+            <Monogram title={null} className="h-8 w-auto text-logo" />
             <span className="text-sm font-semibold uppercase tracking-widest text-muted">Admin</span>
           </Link>
           <div className="flex items-center gap-4 text-sm">
