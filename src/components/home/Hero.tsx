@@ -1,4 +1,5 @@
 import { ButtonLink } from '@/components/ui/Button';
+import { HeroSpray } from './HeroSpray';
 
 export function Hero() {
   return (
@@ -10,6 +11,7 @@ export function Hero() {
         <source media="(min-width: 768px) and (min-aspect-ratio: 5/6)" srcSet="/images/am/banners/hero.webp" width={2400} height={1260} />
         {/* eslint-disable-next-line @next/next/no-img-element -- art direction needs a plain <picture> */}
         <img
+          data-hero-art
           src="/images/am/banners/hero-mobile.webp"
           width={1080}
           height={1440}
@@ -19,6 +21,7 @@ export function Hero() {
           className="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%] md:object-[60%_50%] xl:object-[70%_50%]"
         />
       </picture>
+      <HeroSpray />
       <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/50 to-transparent" aria-hidden />
 
       <div className="container-x pb-9 md:pb-24 lg:pb-28">
