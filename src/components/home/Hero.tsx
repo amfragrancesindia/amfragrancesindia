@@ -3,11 +3,11 @@ import { ButtonLink } from '@/components/ui/Button';
 export function Hero() {
   return (
     <section className="relative isolate flex min-h-[640px] items-end overflow-hidden bg-[#0B0705] text-white h-[100svh] max-h-[980px] md:min-h-[600px]">
-      {/* Art-directed <picture>: wide artwork on landscape screens from tablet size up, tall artwork
-          on phones and portrait tablets. Only the image for the current viewport is downloaded.
-          (Images are served unoptimised, so the sources are listed directly.) */}
+      {/* Art-directed <picture>: wide artwork from tablet size up unless the window is clearly portrait
+          (taller than 6:5), where the tall artwork fits better. Only the image for the current viewport
+          is downloaded. (Images are served unoptimised, so the sources are listed directly.) */}
       <picture>
-        <source media="(min-width: 768px) and (min-aspect-ratio: 1/1)" srcSet="/images/am/banners/hero.webp" width={2400} height={1260} />
+        <source media="(min-width: 768px) and (min-aspect-ratio: 5/6)" srcSet="/images/am/banners/hero.webp" width={2400} height={1260} />
         {/* eslint-disable-next-line @next/next/no-img-element -- art direction needs a plain <picture> */}
         <img
           src="/images/am/banners/hero-mobile.webp"
@@ -16,7 +16,7 @@ export function Hero() {
           alt="Saffron Royale eau de parfum standing in a glowing Mughal archway"
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%] md:object-[55%_50%] xl:object-[70%_50%]"
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%] md:object-[60%_50%] xl:object-[70%_50%]"
         />
       </picture>
       <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/50 to-transparent" aria-hidden />
