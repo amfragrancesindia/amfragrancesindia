@@ -1,0 +1,48 @@
+{
+ "wide": {
+  "w": 2400,
+  "h": 1260,
+  "cap": {
+   "src": "/images/am/banners/hero-cap.webp",
+   "x": 1481,
+   "y": 248,
+   "w": 238,
+   "h": 181
+  },
+  "open": {
+   "src": "/images/am/banners/hero-open.webp",
+   "x": 1465,
+   "y": 232,
+   "w": 270,
+   "h": 213
+  },
+  "nozzle": {
+   "x": 1566.2,
+   "y": 399.2
+  },
+  "angle": 200
+ },
+ "tall": {
+  "w": 1080,
+  "h": 1440,
+  "cap": {
+   "src": "/images/am/banners/hero-mobile-cap.webp",
+   "x": 471,
+   "y": 259,
+   "w": 138,
+   "h": 106
+  },
+  "open": {
+   "src": "/images/am/banners/hero-mobile-open.webp",
+   "x": 455,
+   "y": 243,
+   "w": 170,
+   "h": 138
+  },
+  "nozzle": {
+   "x": 520.8,
+   "y": 347
+  },
+  "angle": 196
+ }
+}
