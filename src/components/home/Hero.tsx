@@ -1,28 +1,36 @@
 import { ButtonLink } from '@/components/ui/Button';
-import { HeroSpray } from './HeroSpray';
+import { HeroFilm } from './HeroFilm';
+
+// The poster and the film share one frame, so the film lines up with the poster exactly. Portrait
+// tablets show the tall film cropped top and bottom, so it is anchored higher to keep the lifted cap in view.
+const FRAME =
+  'absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%] md:object-[60%_50%] xl:object-[70%_50%] md:portrait:object-[60%_10%]';
 
 export function Hero() {
   return (
     <section className="relative isolate flex min-h-[640px] items-end overflow-hidden bg-[#0B0705] text-white h-[100svh] max-h-[980px] md:min-h-[600px]">
-      {/* Art-directed <picture>: wide artwork from tablet size up unless the window is clearly portrait
-          (taller than 6:5), where the tall artwork fits better. Only the image for the current viewport
-          is downloaded. (Images are served unoptimised, so the sources are listed directly.) */}
+      {/* Art-directed <picture>: the wide poster from tablet size up unless the window is clearly portrait
+          (taller than 6:5), where the tall poster fits better. Only the image for the current viewport
+          is downloaded. (Images are served unoptimised, so the sources are listed directly.) Each poster
+          is the first frame of the matching film. */}
       <picture>
-        <source media="(min-width: 768px) and (min-aspect-ratio: 5/6)" srcSet="/images/am/banners/hero.webp" width={2400} height={1260} />
+        <source media="(min-width: 768px) and (min-aspect-ratio: 5/6)" srcSet="/images/am/banners/hero-film.webp" width={1920} height={1080} />
         {/* eslint-disable-next-line @next/next/no-img-element -- art direction needs a plain <picture> */}
         <img
-          data-hero-art
-          src="/images/am/banners/hero-mobile.webp"
+          src="/images/am/banners/hero-film-mobile.webp"
           width={1080}
-          height={1440}
+          height={1920}
           alt="Saffron Royale eau de parfum standing in a glowing Mughal archway"
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_40%] md:object-[60%_50%] xl:object-[70%_50%]"
+          className={FRAME}
         />
       </picture>
-      <HeroSpray />
+      <HeroFilm className={FRAME} />
       <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/50 to-transparent" aria-hidden />
+      {/* Keeps the copy readable over the mist and the floor reflection. */}
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-[62%] bg-gradient-to-t from-black/80 via-black/35 to-transparent md:h-1/2 md:from-black/50 md:via-black/15" aria-hidden />
+      <div className="absolute inset-y-0 left-0 -z-10 hidden w-[65%] bg-gradient-to-r from-black/55 via-black/20 to-transparent md:block" aria-hidden />
 
       <div className="container-x pb-9 md:pb-24 lg:pb-28">
         <div className="max-w-xl animate-fade-up">
