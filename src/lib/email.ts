@@ -60,8 +60,8 @@ function layout(title: string, content: string): string {
     <tr><td align="center">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#FFFFFF;border:1px solid #E8E1D4;border-radius:14px;overflow:hidden;">
         <tr><td style="background:#3E3024;padding:26px;text-align:center;">
-          <div style="font-family:Georgia,serif;font-size:24px;letter-spacing:6px;color:#E9D08A;">AM FRAGRANCES</div>
-          <div style="font-size:11px;letter-spacing:3px;color:#CDBBA0;margin-top:6px;">${escapeHtml(site.tagline.toUpperCase())}</div>
+          <img src="${absoluteUrl('/brand/am-fragrances-logo-email.png')}" width="124" height="89" alt="AM Fragrances" style="display:block;margin:0 auto;border:0;outline:none;font-family:Georgia,serif;font-size:22px;letter-spacing:4px;color:#E3C38A;">
+          <div style="font-size:11px;letter-spacing:3px;color:#CDBBA0;margin-top:14px;">${escapeHtml(site.tagline.toUpperCase())}</div>
         </td></tr>
         <tr><td style="padding:30px 28px;font-size:15px;line-height:1.6;">${content}</td></tr>
         <tr><td style="padding:18px 28px;background:#FAF8F2;font-size:12px;color:#7A6E62;text-align:center;">

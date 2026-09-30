@@ -100,7 +100,7 @@ export function Header() {
               </nav>
             </div>
 
-            <Logo />
+            <Logo className={cn('transition-colors duration-300', transparent ? 'text-logo-light' : 'text-logo')} />
 
             {/* Right: actions */}
             <div className="flex items-center justify-end gap-1 lg:gap-3">

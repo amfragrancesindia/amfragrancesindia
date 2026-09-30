@@ -51,7 +51,7 @@ export function Footer() {
 
       <div className="container-x grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_1.35fr]">
         <div>
-          <Logo className="text-white" />
+          <Logo size="lg" className="text-logo-light" />
           <p className="mt-5 max-w-xs text-[15px] text-white/80">{site.tagline}</p>
           <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/60">
             Perfumes, attars and oils crafted in India, inspired by saffron, oud, rose and sandalwood.
