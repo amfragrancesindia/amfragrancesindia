@@ -13,6 +13,8 @@ const config: Config = {
         // DEFAULT is slightly deeper than the reference site's #9A7B18 so small
         // labels meet WCAG AA contrast (4.5:1) on white and cream.
         gold: { DEFAULT: '#86690F', light: '#C9A961', soft: '#EADBB0' },
+        // The logo's gold: deep on light backgrounds, champagne on dark ones.
+        logo: { DEFAULT: '#9A7536', light: '#E3C38A' },
         navy: '#141B34',
         muted: '#6F665C',
         success: '#15803D',
