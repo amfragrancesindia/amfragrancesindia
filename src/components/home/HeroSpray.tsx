@@ -34,14 +34,24 @@ interface Emitter {
 }
 
 const LIFT_MS = 1500;
+const TILT_MS = 750;
+const UPRIGHT_MS = 850;
 const RETURN_MS = 1500;
 const IDLE_MS = 7000;
 const FIRST_DELAY_MS = 1800;
+const TILT_DEG = 3.2; // how far the bottle tips towards the spray
+const EASE = 'cubic-bezier(0.45, 0.05, 0.25, 1)';
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 // Roughly normal, mean 0, most values within ±1.
 const spreadRand = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+const rotateAbout = (x: number, y: number, cx: number, cy: number, deg: number) => {
+  const r = (deg * Math.PI) / 180;
+  const dx = x - cx;
+  const dy = y - cy;
+  return { x: cx + dx * Math.cos(r) - dy * Math.sin(r), y: cy + dx * Math.sin(r) + dy * Math.cos(r) };
+};
 
 /** Soft, warm radial dot used for the mist and the glint at the nozzle. */
 function mistSprite(): HTMLCanvasElement {
@@ -61,27 +71,33 @@ function mistSprite(): HTMLCanvasElement {
 }
 
 /**
- * Home-banner motion: the wooden cap lifts off the bottle and a fine mist sprays from the gold
- * nozzle, then the cap settles back. The cap and the opened bottle are separate images laid
- * exactly over the banner (same object-fit maths), so the banner looks unchanged between runs.
- * Nothing runs for visitors who prefer reduced motion, or while the banner is off-screen.
+ * Home-banner motion: the wooden cap lifts off, the bottle tips towards the spray and a fine
+ * mist leaves the gold nozzle, then everything settles back. The background patch, reflection,
+ * bottle and cap are separate images that rebuild the banner exactly (same object-fit maths),
+ * so it looks unchanged between runs. Nothing runs for visitors who prefer reduced motion, or
+ * while the banner is off-screen.
  */
 export function HeroSpray() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const openRef = useRef<HTMLImageElement>(null);
+  const plateRef = useRef<HTMLImageElement>(null);
+  const reflectionRef = useRef<HTMLImageElement>(null);
+  const bottleRef = useRef<HTMLImageElement>(null);
   const capRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
-    const open = openRef.current;
+    const plate = plateRef.current;
+    const reflection = reflectionRef.current;
+    const bottle = bottleRef.current;
     const cap = capRef.current;
     const canvas = canvasRef.current;
     const section = root?.parentElement;
     const base = section?.querySelector<HTMLImageElement>('img[data-hero-art]');
     const ctx = canvas?.getContext('2d');
-    if (!root || !open || !cap || !canvas || !section || !base || !ctx) return;
+    if (!root || !plate || !reflection || !bottle || !cap || !canvas || !section || !base || !ctx) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const layers = [plate, reflection, bottle, cap];
 
     let disposed = false;
     let running = false;
@@ -103,22 +119,27 @@ export function HeroSpray() {
       const pct = (v: string | undefined) => (v && v.endsWith('%') ? parseFloat(v) / 100 : 0.5);
       return { px: pct(x), py: pct(y) };
     };
+    const toScreen = (x: number, y: number) => ({ x: geo.ox + x * geo.s, y: geo.oy + y * geo.s });
 
-    const place = (img: HTMLImageElement, box: Box) => {
+    const position = (img: HTMLImageElement, box: Box) => {
       if (!img.src.endsWith(box.src)) img.src = box.src;
       img.style.left = `${geo.ox + box.x * geo.s}px`;
       img.style.top = `${geo.oy + box.y * geo.s}px`;
       img.style.width = `${box.w * geo.s}px`;
       img.style.height = `${box.h * geo.s}px`;
+      // The bottle and its reflection turn about the bottle's bottom corner; the cap about its own base.
+      img.style.transformOrigin =
+        img === cap ? '50% 100%' : `${(art.pivot.x - box.x) * geo.s}px ${(art.pivot.y - box.y) * geo.s}px`;
     };
+
+    const show = (on: boolean) => layers.forEach((img) => (img.style.opacity = on ? '1' : '0'));
 
     const reset = () => {
       current.forEach((a) => a.cancel());
       current = [];
       particles.length = 0;
       emitters.length = 0;
-      open.style.opacity = '0';
-      cap.style.opacity = '0';
+      show(false);
     };
 
     const layout = () => {
@@ -133,8 +154,10 @@ export function HeroSpray() {
       }
       art = next;
       geo = { s, ox: (W - next.w * s) * px, oy: (H - next.h * s) * py, W, H };
-      place(open, art.open);
-      place(cap, art.cap);
+      position(plate, art.plate);
+      position(reflection, art.reflection);
+      position(bottle, art.bottle);
+      position(cap, art.cap);
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
@@ -232,14 +255,17 @@ export function HeroSpray() {
       }
     };
 
-    const spray = (strength: number) => {
+    /** A burst of mist from the nozzle of a bottle tipped by `tilt` degrees. */
+    const spray = (strength: number, tilt: number) => {
       const unit = art.cap.w * geo.s; // the cap's on-screen width sets the scale of the mist
       const scale = unit / 160;
+      const nozzle = rotateAbout(art.nozzle.x, art.nozzle.y, art.pivot.x, art.pivot.y, tilt);
+      const at = toScreen(nozzle.x, nozzle.y);
       const duration = 0.08 + 0.26 * strength;
       emitters.push({
-        x: geo.ox + art.nozzle.x * geo.s,
-        y: geo.oy + art.nozzle.y * geo.s,
-        angle: (art.angle * Math.PI) / 180,
+        x: at.x,
+        y: at.y,
+        angle: ((art.angle + tilt) * Math.PI) / 180,
         unit,
         duration,
         left: duration,
@@ -250,7 +276,7 @@ export function HeroSpray() {
       if (!raf) raf = requestAnimationFrame(frame);
     };
 
-    // ------------------------------------------------------------------- cap
+    // ---------------------------------------------------------------- motion
     const capPath = () => {
       const capW = art.cap.w * geo.s;
       const capH = art.cap.h * geo.s;
@@ -269,51 +295,73 @@ export function HeroSpray() {
       };
     };
 
+    const animate = (el: HTMLElement, frames: Keyframe[], options: KeyframeAnimationOptions) => {
+      const a = el.animate(frames, { fill: 'forwards', ...options });
+      current.push(a);
+      return a;
+    };
+    const turn = (deg: number) => ({ transform: `rotate(${deg}deg)` });
+    // Tip the bottle (and, mirrored, its reflection) from one angle to another.
+    const tip = (from: number, to: number, duration: number, easing = EASE) =>
+      Promise.all([
+        animate(bottle, [turn(from), turn(to)], { duration, easing }).finished,
+        animate(reflection, [turn(-from), turn(-to)], { duration, easing }).finished,
+      ]);
+    // The little kick of the bottle as the pump is pressed.
+    const press = (tilt: number, kick: number) =>
+      Promise.all([
+        animate(bottle, [turn(tilt), turn(tilt + kick), turn(tilt)], { duration: 420, easing: 'ease-out' }).finished,
+        animate(reflection, [turn(-tilt), turn(-tilt - kick), turn(-tilt)], { duration: 420, easing: 'ease-out' }).finished,
+      ]);
+
     const run = async () => {
       running = true;
       try {
-        await Promise.all([open.decode(), cap.decode()]);
+        await Promise.all(layers.map((img) => img.decode()));
         const path = capPath();
-        open.style.opacity = '1';
-        cap.style.opacity = '1';
+        const tilt = Math.cos((art.angle * Math.PI) / 180) < 0 ? -TILT_DEG : TILT_DEG; // tip towards the spray
+        show(true);
 
-        const up = cap.animate([{ transform: path.seated }, { transform: path.clear, offset: 0.5 }, { transform: path.lifted }], {
+        const up = animate(cap, [{ transform: path.seated }, { transform: path.clear, offset: 0.5 }, { transform: path.lifted }], {
           duration: LIFT_MS,
-          easing: 'cubic-bezier(0.45, 0.05, 0.25, 1)',
-          fill: 'forwards',
+          easing: EASE,
         });
-        current.push(up);
+        await wait(LIFT_MS - 350);
+        if (!running || disposed) return;
+        const tipped = tip(0, tilt, TILT_MS);
         await up.finished;
-        const float = cap.animate([{ transform: path.lifted }, { transform: path.floating }], {
+        const float = animate(cap, [{ transform: path.lifted }, { transform: path.floating }], {
           duration: 1400,
           easing: 'ease-in-out',
           direction: 'alternate',
           iterations: Infinity,
+          fill: 'none',
         });
-        current.push(float);
-
-        await wait(250);
+        await tipped;
         if (!running || disposed) return;
-        spray(1);
+
+        spray(1, tilt);
+        void press(tilt, -tilt * 0.22);
         await wait(620);
         if (!running || disposed) return;
-        spray(0.55);
-        await wait(2500);
+        spray(0.55, tilt);
+        void press(tilt, -tilt * 0.12);
+        await wait(1900);
         if (!running || disposed) return;
 
+        const upright = tip(tilt, 0, UPRIGHT_MS, 'cubic-bezier(0.5, 0, 0.3, 1)');
+        await wait(UPRIGHT_MS * 0.55);
+        if (!running || disposed) return;
         float.cancel();
-        const down = cap.animate([{ transform: path.lifted }, { transform: path.clear, offset: 0.5 }, { transform: path.seated }], {
+        const down = animate(cap, [{ transform: path.lifted }, { transform: path.clear, offset: 0.5 }, { transform: path.seated }], {
           duration: RETURN_MS,
           easing: 'cubic-bezier(0.55, 0, 0.35, 1)',
-          fill: 'forwards',
         });
-        current.push(down);
-        await down.finished;
+        await Promise.all([upright, down.finished]);
       } catch {
         // Cancelled by a resize or unmount: the reset below restores the resting banner.
       } finally {
-        open.style.opacity = '0';
-        cap.style.opacity = '0';
+        show(false);
         current.forEach((a) => a.cancel());
         current = [];
         running = false;
@@ -332,9 +380,12 @@ export function HeroSpray() {
 
     const resizeObserver = new ResizeObserver(() => layout());
     resizeObserver.observe(section);
-    const visibility = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
-    }, { threshold: [0, 0.5, 1] });
+    const visibility = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+      },
+      { threshold: [0, 0.5, 1] },
+    );
     visibility.observe(section);
     base.addEventListener('load', layout);
 
@@ -358,12 +409,17 @@ export function HeroSpray() {
     };
   }, []);
 
+  const layer = 'absolute max-w-none opacity-0';
   return (
     <div ref={rootRef} aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element -- positioned animation layers */}
-      <img ref={openRef} alt="" decoding="async" className="absolute max-w-none opacity-0" />
+      <img ref={plateRef} alt="" decoding="async" className={layer} />
       {/* eslint-disable-next-line @next/next/no-img-element -- positioned animation layers */}
-      <img ref={capRef} alt="" decoding="async" className="absolute max-w-none opacity-0 [transform-origin:50%_100%] will-change-transform" />
+      <img ref={reflectionRef} alt="" decoding="async" className={`${layer} will-change-transform`} />
+      {/* eslint-disable-next-line @next/next/no-img-element -- positioned animation layers */}
+      <img ref={bottleRef} alt="" decoding="async" className={`${layer} will-change-transform`} />
+      {/* eslint-disable-next-line @next/next/no-img-element -- positioned animation layers */}
+      <img ref={capRef} alt="" decoding="async" className={`${layer} will-change-transform`} />
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
     </div>
   );
