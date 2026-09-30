@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils';
 // Same rule as the poster <picture> in Hero: the wide film from tablet size up, unless the window is
 // clearly portrait (taller than 6:5), where the tall film fits better.
 const WIDE_QUERY = '(min-width: 768px) and (min-aspect-ratio: 5/6)';
-// Served by app/film/[file]/route.ts (byte ranges, which Safari needs), from public/videos.
-const FILMS = { wide: '/film/hero-wide.mp4', tall: '/film/hero-tall.mp4' };
+// Served by app/film/route.ts (byte ranges, which Safari needs), from public/videos.
+const FILMS = { wide: '/film?v=wide', tall: '/film?v=tall' };
 
 /**
  * The home-banner film: a silent, looping 3D product film (the cap lifts off, the bottle tips and a
