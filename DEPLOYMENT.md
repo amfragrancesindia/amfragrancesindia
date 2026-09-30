@@ -59,9 +59,11 @@ Worker → **Settings → Variables and Secrets → Add**, then **Deploy**:
 Online payment is offered only when all three Razorpay values are set. `wrangler.jsonc` has
 `keep_vars: true`, so deploys never remove these.
 
-The public address defaults to `https://amfragrancesindia.com`. While the site only has its
-workers.dev address, set `NEXT_PUBLIC_APP_URL` to that address under **Settings → Build → Variables
-and secrets** (it is read at build time) and redeploy.
+The public address (sitemap, search results, social previews, email links) defaults to the
+workers.dev address, `https://amfragrancesindia.amfragrancesindia.workers.dev`, set in
+`src/lib/site.ts`. Once your own domain is connected (section 5), change it there, or set
+`NEXT_PUBLIC_APP_URL` under **Settings → Build → Variables and secrets** (it is read at build time)
+and redeploy.
 
 ## 4. Admin account
 
