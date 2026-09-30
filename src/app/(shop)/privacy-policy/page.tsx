@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
       <h2>Grievance officer</h2>
       <p>
         For any concerns about your data or this policy, contact our Grievance Officer at <a href={`mailto:${site.email}`}>{site.email}</a>{' '}
-        or <a href={site.phoneHref}>{site.phone}</a>, {site.address}.
+        or on <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>, {site.address}.
       </p>
 
       <h2>Changes</h2>

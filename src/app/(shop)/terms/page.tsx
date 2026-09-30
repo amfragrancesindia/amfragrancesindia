@@ -80,7 +80,8 @@ export default function TermsPage() {
 
       <h2>Contact and grievances</h2>
       <p>
-        Email <a href={`mailto:${site.email}`}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a>. See our{' '}
+        Email <a href={`mailto:${site.email}`}>{site.email}</a> or message us on{' '}
+        <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>. See our{' '}
         <Link href="/privacy-policy">Privacy Policy</Link> for how we handle your personal data.
       </p>
     </PolicyPage>

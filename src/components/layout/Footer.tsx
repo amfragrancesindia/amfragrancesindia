@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Clock, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Clock, Instagram, Mail, MapPin } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { site } from '@/lib/site';
 import { Logo } from './Logo';
 import { NewsletterForm } from './NewsletterForm';
@@ -86,8 +87,8 @@ export function Footer() {
           <h3 className="text-[17px] font-bold">Contact Us</h3>
           <ul className="mt-4 space-y-3 text-[15px] text-white/80">
             <li>
-              <a href={site.phoneHref} className="flex items-center gap-3 hover:text-white">
-                <Phone className="h-4 w-4 shrink-0" aria-hidden /> {site.phone}
+              <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-white">
+                <WhatsAppIcon className="h-4 w-4 shrink-0" /> Chat on WhatsApp
               </a>
             </li>
             <li>
@@ -106,11 +107,12 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-[13px] text-white/65 sm:flex-row">
+        {/* Room below (phones) or to the right (wider screens) so the floating buttons never cover this line. */}
+        <div className="container-x flex flex-col items-center justify-between gap-3 pb-24 pt-6 text-[13px] text-white/65 sm:flex-row sm:pb-6 sm:pr-28">
           <p>
             © {new Date().getFullYear()} {site.legalName}. All rights reserved.
           </p>
-          <p>Secure payments · UPI · Cards · Net Banking · Cash on Delivery</p>
+          <p>{site.onlinePayments ? 'Secure payments · UPI · Cards · Net Banking · Cash on Delivery' : 'Cash on Delivery across India'}</p>
         </div>
       </div>
     </footer>

@@ -33,7 +33,6 @@ export default async function HomePage() {
     url: site.url,
     logo: absoluteUrl('/icon.png'),
     email: site.email,
-    telephone: site.phone,
     sameAs: [site.social.instagram],
   };
 

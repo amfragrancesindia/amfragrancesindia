@@ -4,7 +4,7 @@ import { site } from '@/lib/site';
 const promises = [
   { Icon: Gem, title: 'Long-lasting blends', text: 'Rich eau de parfum and attar concentrations that stay with you.' },
   { Icon: Truck, title: 'Free shipping', text: `On every order above ₹${site.shipping.freeThreshold.toLocaleString('en-IN')}, across India.` },
-  { Icon: ShieldCheck, title: 'Secure checkout', text: 'Pay by UPI, card, net banking or cash on delivery.' },
+  { Icon: ShieldCheck, title: 'Secure checkout', text: site.onlinePayments ? 'Pay by UPI, card, net banking or cash on delivery.' : 'Cash on delivery: pay in cash or by UPI when it arrives.' },
   { Icon: RotateCcw, title: `${site.returns.days}-day returns`, text: 'Easy returns on unopened, sealed products.' },
 ];
 

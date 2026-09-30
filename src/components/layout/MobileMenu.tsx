@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, Heart, Instagram, Mail, Package, Phone, User } from 'lucide-react';
+import { ChevronRight, Heart, Instagram, Mail, Package, User } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { navigation, site } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { Drawer } from './Drawer';
@@ -62,14 +63,14 @@ export function MobileMenu({ open, onClose, signedIn }: { open: boolean; onClose
         </div>
       </div>
       <div className="space-y-2 border-t border-line bg-cream px-8 py-5 text-sm text-ink/80">
-        <a href={site.phoneHref} className="flex items-center gap-3">
-          <Phone className="h-4 w-4 text-brand" /> {site.phone}
+        <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+          <WhatsAppIcon className="h-4 w-4 text-brand" /> Chat on WhatsApp
         </a>
         <a href={`mailto:${site.email}`} className="flex items-center gap-3">
           <Mail className="h-4 w-4 text-brand" /> {site.email}
         </a>
         <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
-          <Instagram className="h-4 w-4 text-brand" /> @amfragrancesindia
+          <Instagram className="h-4 w-4 text-brand" /> {site.social.instagramHandle}
         </a>
       </div>
     </Drawer>

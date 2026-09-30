@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
   if (!stored && !emailed && process.env.NODE_ENV === 'production') {
     return NextResponse.json(
-      { error: 'We couldn’t send your message right now. Please email or call us directly.' },
+      { error: 'We couldn’t send your message right now. Please email us or message us on WhatsApp.' },
       { status: 503 },
     );
   }

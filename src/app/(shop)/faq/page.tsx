@@ -31,7 +31,7 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
       },
       {
         q: 'Can I change or cancel my order?',
-        a: `Yes — as long as it hasn’t been dispatched. Contact us as soon as possible at ${site.email} or ${site.phone} with your order number.`,
+        a: `Yes — as long as it hasn’t been dispatched. Contact us as soon as possible on WhatsApp or at ${site.email} with your order number.`,
       },
     ],
   },
@@ -40,11 +40,15 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
     items: [
       {
         q: 'Which payment methods do you accept?',
-        a: 'You can pay online by UPI, debit or credit card, net banking or wallet through our secure payment partner Razorpay, or choose Cash on Delivery.',
+        a: site.onlinePayments
+          ? 'You can pay online by UPI, debit or credit card, net banking or wallet through our secure payment partner Razorpay, or choose Cash on Delivery.'
+          : 'We currently accept Cash on Delivery: pay the courier in cash or by UPI when your order arrives. Online payment by UPI and card is coming soon.',
       },
       { q: 'Are prices inclusive of GST?', a: 'Yes. All prices are MRP, inclusive of all taxes. There are no hidden charges at checkout apart from shipping on orders below the free-shipping threshold.' },
       { q: 'Do you have a discount code?', a: `New customers can use ${welcome.code} for ${welcome.description}. Enter it in your cart or at checkout.` },
-      { q: 'Is it safe to pay online?', a: 'Card and UPI details are entered directly on Razorpay’s secure payment page — they never pass through or get stored on our servers.' },
+      ...(site.onlinePayments
+        ? [{ q: 'Is it safe to pay online?', a: 'Card and UPI details are entered directly on Razorpay’s secure payment page — they never pass through or get stored on our servers.' }]
+        : []),
     ],
   },
   {

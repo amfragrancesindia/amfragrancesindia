@@ -59,11 +59,10 @@ Worker → **Settings → Variables and Secrets → Add**, then **Deploy**:
 Online payment is offered only when all three Razorpay values are set. `wrangler.jsonc` has
 `keep_vars: true`, so deploys never remove these.
 
-The public address (sitemap, search results, social previews, email links) defaults to the
-workers.dev address, `https://amfragrancesindia.amfragrancesindia.workers.dev`, set in
-`src/lib/site.ts`. Once your own domain is connected (section 5), change it there, or set
-`NEXT_PUBLIC_APP_URL` under **Settings → Build → Variables and secrets** (it is read at build time)
-and redeploy.
+The public address (sitemap, search results, social previews, email links) is
+`https://amfragrancesindia.com`, set in `src/lib/site.ts` (a build variable `NEXT_PUBLIC_APP_URL`
+overrides it, e.g. for a test copy). `cloudflare-worker.js` redirects `www.` and the workers.dev
+address to it; if the domain ever changes, update both files.
 
 ## 4. Admin account
 
@@ -87,9 +86,13 @@ never changes past orders; they keep their own copy of the name, size and price.
 
 ## 5. Custom domain
 
-Worker → **Settings → Domains & Routes → Add → Custom domain**, e.g. `amfragrancesindia.com` and
-`www.amfragrancesindia.com`. The domain has to be on Cloudflare DNS; if a DNS record for that name
-already exists (for example one pointing to Vercel), delete it first.
+The store uses `amfragrancesindia.com` (registered with Cloudflare Registrar on 2026-09-30, renews
+automatically). Worker → **Settings → Domains & Routes → Add → Custom domain**: add
+`amfragrancesindia.com` and `www.amfragrancesindia.com`. The domain has to be on Cloudflare DNS; if a
+DNS record for that name already exists, delete it first.
+
+Mail to the domain (for example `luxury@amfragrancesindia.com`, shown on the site) is forwarded to the
+store's own inbox with **Email Routing** (domain → Email → Email Routing).
 
 ## 6. Razorpay webhook
 

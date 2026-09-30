@@ -127,9 +127,9 @@ export function CheckoutForm({ cod, online, signedIn, defaultEmail, defaultName 
         <AlertCircle className="mx-auto h-8 w-8 text-brand" />
         <h2 className="mt-4 text-xl font-semibold">Online ordering is temporarily unavailable</h2>
         <p className="mt-2 text-muted">
-          Please call us on{' '}
-          <a href={site.phoneHref} className="font-medium text-brand">
-            {site.phone}
+          Please message us on{' '}
+          <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="font-medium text-brand">
+            WhatsApp
           </a>{' '}
           or email{' '}
           <a href={`mailto:${site.email}`} className="font-medium text-brand">

@@ -1,11 +1,15 @@
-// Cloudflare Worker entry (wrangler.jsonc "main"). It serves the home-banner films itself and hands
-// every other request to the Next.js app built by @opennextjs/cloudflare.
+// Cloudflare Worker entry (wrangler.jsonc "main"). It sends every visitor to the store's own domain,
+// serves the home-banner films itself and hands every other request to the Next.js app built by
+// @opennextjs/cloudflare.
 //
-// Why: Workers static assets answer every request with the whole file, but Safari only plays a
-// <video> whose server honours byte ranges ("Range: bytes=0-1"). Serving /film?v=wide|tall here,
-// before Next.js, gives proper 206 responses at the speed of a plain file.
+// Why the films: Workers static assets answer every request with the whole file, but Safari only
+// plays a <video> whose server honours byte ranges ("Range: bytes=0-1"). Serving /film?v=wide|tall
+// here, before Next.js, gives proper 206 responses at the speed of a plain file.
 import nextApp from './.open-next/worker.js';
 
+// www and the *.workers.dev address redirect here permanently, so customers, carts, sign-ins and
+// search engines all use one address. Must match site.url in src/lib/site.ts.
+const HOST = 'amfragrancesindia.com';
 const FILMS = { wide: '/videos/hero-wide.mp4', tall: '/videos/hero-tall.mp4' };
 const CACHE = 'public, max-age=86400';
 
@@ -54,8 +58,16 @@ async function serveFilm(request, env) {
 
 export default {
   async fetch(request, env, ctx) {
-    const { pathname } = new URL(request.url);
-    if (pathname === '/film' && (request.method === 'GET' || request.method === 'HEAD')) return serveFilm(request, env);
+    const url = new URL(request.url);
+    const readOnly = request.method === 'GET' || request.method === 'HEAD';
+    if (url.hostname === `www.${HOST}` || url.hostname.endsWith('.workers.dev')) {
+      url.protocol = 'https:';
+      url.hostname = HOST;
+      url.port = '';
+      // 308 keeps a form post a post; 301 is the classic permanent move for pages.
+      return Response.redirect(url.toString(), readOnly ? 301 : 308);
+    }
+    if (url.pathname === '/film' && readOnly) return serveFilm(request, env);
     return nextApp.fetch(request, env, ctx);
   },
 };

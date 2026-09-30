@@ -66,7 +66,7 @@ function layout(title: string, content: string): string {
         <tr><td style="padding:30px 28px;font-size:15px;line-height:1.6;">${content}</td></tr>
         <tr><td style="padding:18px 28px;background:#FAF8F2;font-size:12px;color:#7A6E62;text-align:center;">
           ${escapeHtml(site.legalName)} · ${escapeHtml(site.address)}<br>
-          <a href="mailto:${site.email}" style="color:#5A4A3A;">${site.email}</a> · ${escapeHtml(site.phone)}
+          <a href="mailto:${site.email}" style="color:#5A4A3A;">${site.email}</a> · <a href="${site.whatsapp}" style="color:#5A4A3A;">WhatsApp</a>
         </td></tr>
       </table>
     </td></tr>

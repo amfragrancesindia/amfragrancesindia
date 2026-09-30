@@ -6,6 +6,7 @@ import { Lock, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { ButtonLink } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
+import { site } from '@/lib/site';
 import { formatPrice } from '@/lib/utils';
 import { CatalogErrorNotice } from './CatalogErrorNotice';
 import { CouponForm } from './CouponForm';
@@ -106,7 +107,9 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
         <ButtonLink href="/checkout" size="lg" className="mt-6 w-full">
           <Lock className="h-4 w-4" /> Proceed to Checkout
         </ButtonLink>
-        <p className="mt-3 text-center text-[12.5px] text-muted">UPI · Cards · Net Banking · Cash on Delivery</p>
+        <p className="mt-3 text-center text-[12.5px] text-muted">
+          {site.onlinePayments ? 'UPI · Cards · Net Banking · Cash on Delivery' : 'Cash on Delivery · Pay in cash or by UPI on delivery'}
+        </p>
       </aside>
     </div>
   );

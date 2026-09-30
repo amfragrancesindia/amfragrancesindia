@@ -21,7 +21,7 @@ export function BackToTop() {
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
       className={cn(
-        'fixed bottom-5 right-5 z-30 grid h-11 w-11 place-items-center rounded-full bg-white text-ink shadow-soft ring-1 ring-line transition-all duration-300 hover:bg-ink hover:text-white',
+        'fixed bottom-[5.5rem] right-[1.625rem] z-30 grid h-11 w-11 place-items-center rounded-full bg-white text-ink shadow-soft ring-1 ring-line transition-all duration-300 hover:bg-ink hover:text-white',
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0',
       )}
     >

@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Clock, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Clock, Instagram, Mail, MapPin } from 'lucide-react';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: `Questions about an order or a fragrance? Contact AM Fragrances by phone, email or the form — we reply within one business day.`,
+  description: `Questions about an order or a fragrance? Contact AM Fragrances on WhatsApp, by email or the form — we reply within one business day.`,
   alternates: { canonical: '/contact' },
 };
 
 const channels = [
-  { Icon: Phone, label: 'Call us', value: site.phone, href: site.phoneHref },
+  { Icon: WhatsAppIcon, label: 'WhatsApp', value: 'Chat with us', href: site.whatsapp },
   { Icon: Mail, label: 'Email us', value: site.email, href: `mailto:${site.email}` },
-  { Icon: Instagram, label: 'Instagram', value: '@amfragrancesindia', href: site.social.instagram },
+  { Icon: Instagram, label: 'Instagram', value: site.social.instagramHandle, href: site.social.instagram },
   { Icon: MapPin, label: 'Based in', value: site.address },
 ];
 

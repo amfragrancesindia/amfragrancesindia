@@ -53,7 +53,8 @@ export default function RefundPolicyPage() {
 
       <h2>Contact</h2>
       <p>
-        Email <a href={`mailto:${site.email}`}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a> ({site.hours}).
+        Email <a href={`mailto:${site.email}`}>{site.email}</a> or message us on{' '}
+        <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a> ({site.hours}).
       </p>
     </PolicyPage>
   );
