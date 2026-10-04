@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { isInStock, startingVariant, type Product } from '@/lib/catalog';
 import { Price } from '@/components/ui/Price';
 import { cn } from '@/lib/utils';
-import { QuickAddButton } from './QuickAddButton';
+import { orderMessage } from '@/lib/whatsapp';
+import { WhatsAppBuyButton } from './WhatsAppBuyButton';
 import { WishlistButton } from './WishlistButton';
 
 interface ProductCardProps {
@@ -61,7 +62,7 @@ export function ProductCard({ product, priority, className }: ProductCardProps) 
         </h3>
         <div className="mt-auto flex items-end justify-between gap-2 pt-2">
           <Price price={variant.price} mrp={variant.mrp} size="sm" />
-          {inStock && <QuickAddButton slug={product.slug} variantId={variant.id} name={product.name} className="hidden sm:grid" />}
+          {inStock && <WhatsAppBuyButton message={orderMessage(product, variant, 1)} name={product.name} />}
         </div>
       </div>
     </article>

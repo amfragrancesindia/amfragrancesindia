@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import toast from 'react-hot-toast';
 import { Check, RotateCcw, ShoppingCart, Truck, Wallet } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { Button, buttonVariants } from '@/components/ui/Button';
@@ -13,6 +12,7 @@ import { getVariant, type Product } from '@/lib/catalog';
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { orderMessage, whatsappOrderLink } from '@/lib/whatsapp';
+import { copyOrderForChat } from './WhatsAppBuyButton';
 import { WishlistButton } from './WishlistButton';
 
 interface PurchasePanelProps {
@@ -36,16 +36,8 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
     window.setTimeout(() => setAdded(false), 1800);
   };
 
-  // Buy Now opens WhatsApp. Without the store's number in site.ts the chat can't be pre-filled,
-  // so the order details are copied for the customer to paste.
+  // Buy Now opens WhatsApp with this order (copied for pasting while the store's number isn't set).
   const message = orderMessage(product, variant, quantity);
-  const buyNow = () => {
-    if (site.whatsappNumber) return;
-    navigator.clipboard
-      ?.writeText(message)
-      .then(() => toast.success('Order details copied — paste them in the WhatsApp chat.', { duration: 6000 }))
-      .catch(() => undefined);
-  };
 
   return (
     <div>
@@ -116,7 +108,7 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
           href={whatsappOrderLink(message)}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={buyNow}
+          onClick={() => copyOrderForChat(message)}
           aria-disabled={!variant.inStock || undefined}
           title="Order on WhatsApp"
           className={cn(
