@@ -147,7 +147,7 @@ export function sendOrderConfirmation(o: OrderEmailData) {
   const content = `
     <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;margin:0 0 8px;">Thank you, ${escapeHtml(o.customerName.split(' ')[0])}.</h1>
     <p style="margin:0 0 6px;">We've received your order <strong>#${escapeHtml(o.orderNumber)}</strong>${o.paymentMethod === 'COD' ? ' and will collect payment on delivery' : ' and your payment'}.</p>
-    <p style="margin:0;color:#5F554B;">It will be dispatched within ${site.shipping.dispatch}. We'll email you when it ships.</p>
+    <p style="margin:0;color:#5F554B;">It will be dispatched within ${site.shipping.dispatch}. Questions? Just reply to this email or message us on WhatsApp.</p>
     ${orderTable(o)}
     <p style="margin:0 0 6px;font-weight:600;">Delivering to</p>
     ${addressBlock(o)}
@@ -180,7 +180,7 @@ export function sendPasswordReset(email: string, resetUrl: string) {
 export function sendWelcomeEmail(email: string, name: string) {
   const content = `
     <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;margin:0 0 8px;">Welcome, ${escapeHtml(name.split(' ')[0])}.</h1>
-    <p>Thank you for joining ${escapeHtml(site.name)}. Discover eau de parfums, attars and oils inspired by India's perfumery heritage.</p>
+    <p>Thank you for joining ${escapeHtml(site.name)}. Discover our long-lasting eaux de parfum, crafted in India.</p>
     <p style="margin:24px 0 0;">${button(absoluteUrl('/products'), 'Explore the collection')}</p>`;
   return sendEmail({ to: email, subject: `Welcome to ${site.name}`, html: layout('Welcome', content) });
 }

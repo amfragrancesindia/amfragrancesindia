@@ -34,5 +34,9 @@
 	],
 	"observability": {
 		"enabled": true
+	},
+	// Mondays 03:30 UTC: keeps the Brevo email key in use (see "scheduled" in cloudflare-worker.js).
+	"triggers": {
+		"crons": ["30 3 * * 1"]
 	}
 }

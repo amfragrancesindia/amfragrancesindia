@@ -1,6 +1,7 @@
 // Cloudflare Worker entry (wrangler.jsonc "main"). It sends every visitor to the store's own domain,
 // serves the home-banner films and the admin-uploaded photos and videos itself, takes product video
-// uploads, and hands every other request to the Next.js app built by @opennextjs/cloudflare.
+// uploads, and hands every other request to the Next.js app built by @opennextjs/cloudflare. Once a
+// week it also keeps the Brevo email key in use.
 //
 // Why here and not in Next.js: Safari only plays a <video> whose server honours byte ranges
 // ("Range: bytes=0-1"), which Workers static assets don't, and a large video upload has to stream
@@ -153,5 +154,18 @@ export default {
     if (url.pathname.startsWith('/media/') && readOnly) return serveMedia(request, env, url.pathname.slice('/media/'.length));
     if (url.pathname === '/upload/video' && request.method === 'PUT') return uploadVideo(request, env);
     return nextApp.fetch(request, env, ctx);
+  },
+
+  // Weekly (wrangler.jsonc "triggers"). Brevo switches off an API key that goes unused for 90 days,
+  // so a quiet spell with no orders would silently stop the store's emails; reading the account
+  // once a week keeps the key in use.
+  async scheduled(event, env, ctx) {
+    if (!env.BREVO_API_KEY) return;
+    ctx.waitUntil(
+      fetch('https://api.brevo.com/v3/account', { headers: { 'api-key': env.BREVO_API_KEY, Accept: 'application/json' } }).then(
+        (res) => res.ok || console.error('[email] Brevo key check failed', res.status),
+        (error) => console.error('[email] Brevo key check failed', error),
+      ),
+    );
   },
 };
