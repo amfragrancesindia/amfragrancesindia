@@ -1,6 +1,7 @@
-// Transactional email through the Resend HTTP API (https://resend.com), which
-// works on Cloudflare Workers. Without RESEND_API_KEY the message is written
-// to the server log instead, so flows can still be tested locally.
+// Transactional email through Brevo (https://www.brevo.com) or Resend (https://resend.com),
+// both plain HTTP APIs that work on Cloudflare Workers; BREVO_API_KEY wins when both are set.
+// Without a key the message is written to the server log instead, so flows can still be
+// tested locally.
 import { site } from './site';
 import { absoluteUrl, escapeHtml, formatPrice } from './utils';
 
@@ -13,16 +14,22 @@ interface EmailOptions {
 }
 
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY);
+  return Boolean(process.env.BREVO_API_KEY || process.env.RESEND_API_KEY);
 }
 
 export function storeNotifyAddress(): string {
   return process.env.STORE_NOTIFY_EMAIL || site.email;
 }
 
-/** Sender address; its domain must be verified in Resend. */
+/** Sender address; its domain must be authenticated with the email service. */
 function fromAddress(): string {
   return process.env.EMAIL_FROM || `${site.name} <orders@${site.email.split('@')[1]}>`;
+}
+
+/** "Name <email>" → { name, email }, the shape Brevo wants. */
+function splitAddress(address: string): { name?: string; email: string } {
+  const m = /^\s*"?([^"<]*?)"?\s*<([^<>\s]+)>\s*$/.exec(address);
+  return m ? { ...(m[1] && { name: m[1] }), email: m[2] } : { email: address.trim() };
 }
 
 export async function sendEmail({ to, subject, html, text, replyTo }: EmailOptions): Promise<boolean> {
@@ -33,14 +40,34 @@ export async function sendEmail({ to, subject, html, text, replyTo }: EmailOptio
     console.info(`[email] email not configured — would send "${subject}" to ${to}\n${preview.slice(0, 1200)}`);
     return false;
   }
+  // Replies go to the store inbox unless a message says otherwise; the sender
+  // address (orders@) has no mailbox of its own.
+  const reply = replyTo || site.email;
+  const plain = text || stripHtml(html);
+  // Fail fast: a slow email service must never hold up a checkout.
+  const signal = AbortSignal.timeout(10_000);
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: fromAddress(), to: [to], subject, html, text: text || stripHtml(html), reply_to: replyTo }),
-      // Fail fast: a slow email service must never hold up a checkout.
-      signal: AbortSignal.timeout(10_000),
-    });
+    const brevoKey = process.env.BREVO_API_KEY;
+    const res = brevoKey
+      ? await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': brevoKey, 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            sender: splitAddress(fromAddress()),
+            to: [{ email: to }],
+            replyTo: { email: reply },
+            subject,
+            htmlContent: html,
+            textContent: plain,
+          }),
+          signal,
+        })
+      : await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: fromAddress(), to: [to], subject, html, text: plain, reply_to: reply }),
+          signal,
+        });
     if (!res.ok) {
       console.error('[email] failed to send', subject, res.status, (await res.text()).slice(0, 300));
       return false;

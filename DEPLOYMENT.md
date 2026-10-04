@@ -51,7 +51,7 @@ Worker → **Settings → Variables and Secrets → Add**, then **Deploy**:
 | `RAZORPAY_KEY_ID` | Text | Online payments |
 | `RAZORPAY_KEY_SECRET` | Secret | Online payments |
 | `RAZORPAY_WEBHOOK_SECRET` | Secret | Online payments (secret you choose for the webhook, step 6) |
-| `RESEND_API_KEY` | Secret | Order confirmations, password resets, contact notifications |
+| `BREVO_API_KEY` (or `RESEND_API_KEY`) | Secret | Order confirmations, password resets, contact notifications (step 7) |
 | `EMAIL_FROM` | Text | Optional sender, e.g. `AM Fragrances <orders@amfragrancesindia.com>` |
 | `STORE_NOTIFY_EMAIL` | Text | Optional inbox for new-order and contact notifications |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Text, Secret | Optional “Continue with Google” (redirect URI `https://<domain>/api/auth/callback/google`) |
@@ -107,10 +107,20 @@ Razorpay Dashboard → Settings → Webhooks → Add:
 
 Test with Razorpay **test keys** first, then switch to live keys.
 
-## 7. Email (Resend)
+## 7. Email (Brevo)
 
-Create a Resend account, add and verify your domain (Resend shows the DNS records to add in
-Cloudflare), create an API key and save it as `RESEND_API_KEY`.
+1. Create a free Brevo account (300 emails a day).
+2. **Settings → Senders, Domains, IPs → Domains → Add a domain**: `amfragrancesindia.com`, and let
+   Brevo add its records in Cloudflare (Brevo code, DKIM, DMARC). Don't add a Brevo SPF include;
+   the domain's single SPF record belongs to Email Routing.
+3. **Your name (top right) → Security → Authorized IPs**: turn off **Block unknown IP addresses**.
+   Cloudflare Workers send from changing addresses, so with it on Brevo refuses every email (401).
+4. **SMTP & API → API keys → Generate a new API key**, and save it as the Worker secret
+   `BREVO_API_KEY`.
+
+Emails go out from `orders@amfragrancesindia.com` (change with `EMAIL_FROM`); replies go to the
+store email in `src/lib/site.ts`. Resend works too: verify the domain there and set `RESEND_API_KEY`
+instead.
 
 ## Changing the database later
 
