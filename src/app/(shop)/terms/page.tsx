@@ -76,7 +76,7 @@ export default function TermsPage() {
       </p>
 
       <h2>Governing law</h2>
-      <p>These terms are governed by the laws of India. Courts in Mumbai, Maharashtra shall have jurisdiction.</p>
+      <p>These terms are governed by the laws of India. Courts in Kasaragod, Kerala shall have jurisdiction.</p>
 
       <h2>Contact and grievances</h2>
       <p>

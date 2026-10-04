@@ -19,7 +19,7 @@ export const site = {
   // The store's WhatsApp number with country code, digits only (e.g. '919876543210'). When set,
   // "Buy Now" opens WhatsApp with the product, size, quantity and price already typed in.
   whatsappNumber: '' as string,
-  address: 'Mumbai, Maharashtra, India',
+  address: 'Kasaragod, Kerala, India',
   hours: 'Monday – Saturday, 10:00 AM – 7:00 PM IST',
   social: {
     instagram: 'https://www.instagram.com/amfragrancesindia',
