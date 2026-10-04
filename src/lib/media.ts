@@ -1,4 +1,4 @@
-// Product photos uploaded in the admin panel are stored in Cloudflare R2
+// Product photos and videos uploaded in the admin panel are stored in Cloudflare R2
 // (binding "MEDIA" in wrangler.jsonc) and served from /media/<file>.
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
@@ -9,8 +9,27 @@ export const MEDIA_TYPES: Record<string, string> = {
   'image/avif': 'avif',
 };
 
-export const MEDIA_FILE = /^p-[a-f0-9]{32}\.(webp|jpg|png|avif)$/;
+/** Photos are p-<hash>.<ext>, videos v-<random>.mp4. Keep in step with cloudflare-worker.js. */
+export const MEDIA_FILE = /^(?:p-[a-f0-9]{32}\.(webp|jpg|png|avif)|v-[a-f0-9]{32}\.(mp4))$/;
 export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+
+/** Product videos: MP4 or MOV (phones), sent straight to R2 by cloudflare-worker.js. */
+export const VIDEO_TYPES = ['video/mp4', 'video/quicktime'] as const;
+export const MAX_VIDEO_BYTES = 60 * 1024 * 1024;
+export const MAX_VIDEO_SECONDS = 30;
+
+/**
+ * Signs a short-lived permit to upload one video file. The upload itself goes to
+ * /upload/video, which cloudflare-worker.js handles before Next.js so a large file
+ * streams straight into R2. Both sides sign with AUTH_SECRET.
+ */
+export async function signVideoUpload(key: string, expires: number): Promise<string> {
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  if (!secret) throw new Error('AUTH_SECRET is not set');
+  const hmac = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', hmac, new TextEncoder().encode(`video-upload:${key}:${expires}`));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 
 export function mediaBucket() {
   try {

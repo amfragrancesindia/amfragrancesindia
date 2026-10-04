@@ -41,7 +41,7 @@ export function ProductDetails({ product }: { product: Product }) {
         </dl>
       </Section>
 
-      <Section title={isSet ? 'What’s inside' : 'Fragrance notes'} defaultOpen>
+      <Section title={isSet ? 'What’s inside' : 'Ingredients & notes'} defaultOpen>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {(
             [
@@ -82,7 +82,7 @@ export function ProductDetails({ product }: { product: Product }) {
           <li>
             Dispatched within {site.shipping.dispatch}; delivered in {site.shipping.delivery} across India.
           </li>
-          <li>Cash on Delivery and secure online payment available.</li>
+          <li>{site.onlinePayments ? 'Cash on Delivery and secure online payment available.' : 'Cash on Delivery available, or order on WhatsApp.'}</li>
           <li>
             Returns accepted within {site.returns.days} days of delivery for unused, sealed products. See our{' '}
             <a href="/refund-policy" className="font-medium text-brand underline underline-offset-4">

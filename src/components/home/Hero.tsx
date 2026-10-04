@@ -20,7 +20,7 @@ export function Hero() {
           src="/images/am/banners/hero-film-mobile.webp"
           width={1080}
           height={1920}
-          alt="Saffron Royale eau de parfum standing in a glowing Mughal archway"
+          alt="Royal Oud eau de parfum standing in a glowing Mughal archway"
           fetchPriority="high"
           decoding="async"
           className={FRAME}
@@ -41,15 +41,14 @@ export function Hero() {
             <span className="font-script text-[1.3em] font-normal leading-[0.9] text-gold-soft">Indian</span> Luxury
           </h1>
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-white/75 sm:text-[17px]">
-            Long-lasting perfumes and attars inspired by saffron, oud, rose and sandalwood — made for the moments you want to be
-            remembered.
+            Long-lasting eaux de parfum, from deep Royal Oud to fresh Ocean Breeze — made for the moments you want to be remembered.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/products" variant="light" size="lg">
               Shop the Collection
             </ButtonLink>
-            <ButtonLink href="/products/saffron-royale" variant="outline-light" size="lg">
-              Discover Saffron Royale
+            <ButtonLink href="/products/royal-oud" variant="outline-light" size="lg">
+              Discover Royal Oud
             </ButtonLink>
           </div>
         </div>

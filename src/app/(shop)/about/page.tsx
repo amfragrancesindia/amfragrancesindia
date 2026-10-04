@@ -5,38 +5,38 @@ import { ProductGrid } from '@/components/product/ProductGrid';
 import { ButtonLink } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { getBestsellers } from '@/lib/catalog';
+import { queryProducts } from '@/lib/catalog';
 import { getStoreProducts } from '@/lib/products';
 
 export const metadata: Metadata = {
   title: 'About Us',
   description:
-    'AM Fragrances creates luxury perfumes, attars and oils inspired by India’s perfumery heritage — saffron, oud, rose and sandalwood, crafted to last.',
+    'AM Fragrances creates luxury eaux de parfum crafted in India — five signatures from deep Royal Oud to fresh Ocean Breeze, made to last.',
   alternates: { canonical: '/about' },
 };
 
 const values = [
-  { Icon: Flower2, title: 'Heritage ingredients', text: 'Saffron, oud, rose, jasmine and sandalwood — the treasured materials of Indian perfumery sit at the heart of every blend.' },
-  { Icon: Gem, title: 'Crafted to last', text: 'Rich eau de parfum and attar concentrations, balanced to wear beautifully in the Indian climate from morning to night.' },
+  { Icon: Flower2, title: 'Heritage ingredients', text: 'Oud, saffron, rose, jasmine, vanilla and sandalwood — fine ingredients sit at the heart of every blend.' },
+  { Icon: Gem, title: 'Crafted to last', text: 'Rich eau de parfum concentrations, balanced to wear beautifully in the Indian climate from morning to night.' },
   { Icon: Feather, title: 'Modern elegance', text: 'Traditional craft meets contemporary composition, so each fragrance feels both familiar and new.' },
-  { Icon: HandHeart, title: 'Honest luxury', text: 'Clear MRP pricing inclusive of all taxes, secure checkout, cash on delivery and easy returns on sealed products.' },
+  { Icon: HandHeart, title: 'Honest luxury', text: 'Clear MRP pricing inclusive of all taxes, cash on delivery, ordering on WhatsApp and easy returns on sealed products.' },
 ];
 
-// The bestsellers strip comes from the database.
+// The collection strip comes from the database.
 export const dynamic = 'force-dynamic';
 
 export default async function AboutPage() {
-  const bestsellers = getBestsellers(await getStoreProducts(), 4);
+  const collection = queryProducts(await getStoreProducts(), { sort: 'featured' }).slice(0, 5);
   return (
     <>
       <section className="relative isolate overflow-hidden bg-[#140D08] text-white">
         <Image
-          src="/images/am/banners/attar-collection.webp"
-          alt="AM Fragrances attars and perfume oils"
+          src="/images/am/banners/hero-film.webp"
+          alt="Royal Oud eau de parfum in a glowing Mughal archway"
           fill
           priority
           sizes="100vw"
-          className="-z-10 object-cover object-center opacity-70"
+          className="-z-10 object-cover object-[75%_50%] opacity-70"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/50 to-black/10" aria-hidden />
         <div className="container-x py-14 sm:py-24">
@@ -52,7 +52,7 @@ export default async function AboutPage() {
 
       <section className="container-x grid grid-cols-1 gap-12 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-cream">
-          <Image src="/images/am/products/saffron-royale-2.webp" alt="Saffron Royale with its presentation box" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+          <Image src="/images/am/products/royal-oud.webp" alt="Royal Oud with its gift box" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
         </div>
         <div>
           <p className="eyebrow">Who we are</p>
@@ -63,8 +63,9 @@ export default async function AboutPage() {
               the quiet smoke of oud at a celebration. We translate those moments into compositions that feel personal and refined.
             </p>
             <p>
-              Our collection spans signature eaux de parfum, alcohol-free attars and soothing perfume oils. Each is blended to perform
-              beautifully in the Indian climate and to leave a trail that is noticed, remembered and loved.
+              Our collection of eaux de parfum ranges from the deep, smoky warmth of Royal Oud and Midnight Noir to the fresh brightness
+              of Citrus Wood and Ocean Breeze and the soft florals of Velvet Bloom. Each is blended to perform beautifully in the Indian
+              climate and to leave a trail that is noticed, remembered and loved.
             </p>
             <p>
               We believe luxury should also feel effortless: transparent pricing, careful packaging, cash on delivery and a team that is
@@ -95,10 +96,10 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {bestsellers.length > 0 && (
+      {collection.length > 0 && (
         <section className="container-x py-16 sm:py-24">
-          <SectionHeading title="Customer Favourites" action={{ href: '/products', label: 'Shop all' }} />
-          <ProductGrid products={bestsellers} className="mt-8" />
+          <SectionHeading title="The Collection" action={{ href: '/products', label: 'Shop all' }} />
+          <ProductGrid products={collection} className="mt-8 lg:grid-cols-3 xl:grid-cols-5" />
         </section>
       )}
     </>

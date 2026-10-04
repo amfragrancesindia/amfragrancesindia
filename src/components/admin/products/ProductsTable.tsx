@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { ImageOff, PackageOpen, Plus, Search } from 'lucide-react';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { CATEGORY_LABELS, GENDER_LABELS, type Product } from '@/lib/catalog';
+import { STARTER_PRODUCTS } from '@/lib/starter-products';
 import { cn, formatDate, formatPrice } from '@/lib/utils';
 
 type Tab = 'all' | 'active' | 'draft' | 'soldout';
@@ -93,7 +94,7 @@ export function ProductsTable({ products }: { products: Product[] }) {
       const res = await fetch('/api/admin/products/import', { method: 'POST' });
       const data = (await res.json().catch(() => ({}))) as { created?: number; error?: string };
       if (!res.ok) throw new Error(data.error || 'Import failed');
-      toast.success(data.created ? `${data.created} products imported` : 'All starter products are already here');
+      toast.success(data.created ? `${data.created} products imported` : 'These products are already here');
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Import failed');
@@ -130,11 +131,11 @@ export function ProductsTable({ products }: { products: Product[] }) {
           </span>
           <h2 className="mt-5 text-xl font-semibold">No products yet</h2>
           <p className="mx-auto mt-2 max-w-md text-muted">
-            Start with the 14 AM Fragrances products the shop launched with (you can edit or delete them afterwards), or add your own.
+            Start with the {STARTER_PRODUCTS.length} AM Fragrances products ({STARTER_PRODUCTS.map((p) => p.name).join(', ')}) — you can edit or delete them afterwards — or add your own.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button onClick={() => void importStarter()} loading={importing}>
-              Import the 14 starter products
+              Import the {STARTER_PRODUCTS.length} products
             </Button>
             <ButtonLink href="/admin/products/new" variant="outline">
               Add a product

@@ -12,8 +12,6 @@ const columns = [
       { name: 'Men', href: '/products?gender=men' },
       { name: 'Women', href: '/products?gender=women' },
       { name: 'Unisex', href: '/products?gender=unisex' },
-      { name: 'Attars & Oils', href: '/products?category=attars-oils' },
-      { name: 'Gift Sets', href: '/products?category=gift-set' },
       { name: 'All Products', href: '/products' },
     ],
   },
@@ -55,7 +53,7 @@ export function Footer() {
           <Logo size="lg" className="text-logo-light" />
           <p className="mt-5 max-w-xs text-[15px] text-white/80">{site.tagline}</p>
           <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/60">
-            Perfumes, attars and oils crafted in India, inspired by saffron, oud, rose and sandalwood.
+            Luxury eaux de parfum crafted in India — long-lasting fragrances in 100 ml flacons, each with its own gift box.
           </p>
           <a
             href={site.social.instagram}

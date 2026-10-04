@@ -3,6 +3,7 @@ import { cache } from 'react';
 import type { Product as ProductRow } from '@prisma/client';
 import { BADGES, CATEGORIES, GENDERS, findProduct, type Badge, type Category, type Gender, type Product, type Variant } from './catalog';
 import { isDatabaseConfigured, prisma } from './prisma';
+import { VIDEO_URL } from './product-input';
 
 const asStrings = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string' && v.trim() !== '') : [];
@@ -36,6 +37,7 @@ export function toProduct(row: ProductRow): Product {
     category: oneOf<Category>(CATEGORIES, row.category, 'perfume'),
     concentration: row.concentration,
     images: asStrings(row.images),
+    video: row.video && VIDEO_URL.test(row.video) ? row.video : null,
     variants: asVariants(row.variants),
     notes: asNotes(row.notes),
     longevity: row.longevity,

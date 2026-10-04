@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-const SUGGESTIONS = ['Oud', 'Saffron', 'Rose', 'Attar', 'Jasmine', 'Sandalwood', 'Musk', 'Gift set'];
+const SUGGESTIONS = ['Oud', 'Saffron', 'Vanilla', 'Citrus', 'Lavender', 'Rose', 'Musk', 'Sea Salt'];
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
   const raw = (await searchParams).q;
@@ -35,7 +35,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           name="q"
           type="search"
           defaultValue={q}
-          placeholder="Search perfumes, attars or notes"
+          placeholder="Search perfumes or notes"
           className="min-w-0 flex-1 bg-transparent text-[16px] outline-none placeholder:text-muted/70"
         />
         <button type="submit" className="h-10 rounded-full bg-ink px-5 text-sm font-semibold text-white transition hover:bg-brand">

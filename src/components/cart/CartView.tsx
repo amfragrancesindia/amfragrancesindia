@@ -39,7 +39,7 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
             <ShoppingBag className="h-7 w-7 text-brand" />
           </span>
           <h2 className="mt-5 text-xl font-semibold">Your cart is empty</h2>
-          <p className="mt-2 text-muted">Explore our eau de parfums and attars to find your signature scent.</p>
+          <p className="mt-2 text-muted">Explore our eaux de parfum to find your signature scent.</p>
           <ButtonLink href="/products" className="mt-6">
             Shop the collection
           </ButtonLink>

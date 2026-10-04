@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { productInput, productToInput, toProductData } from '@/lib/product-input';
 import { STARTER_PRODUCTS } from '@/lib/starter-products';
 
-/** Copies the store's original products into the database (skips any already there). */
+/** Copies the AM Fragrances collection into the database (skips any already there). */
 export async function POST(req: Request) {
   const denied = await guardAdminRequest(req);
   if (denied) return denied;

@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Check, RotateCcw, ShieldCheck, ShoppingCart, Truck, Wallet } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Check, RotateCcw, ShoppingCart, Truck, Wallet } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonVariants } from '@/components/ui/Button';
 import { Price } from '@/components/ui/Price';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { getVariant, type Product } from '@/lib/catalog';
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
+import { orderMessage, whatsappOrderLink } from '@/lib/whatsapp';
 import { WishlistButton } from './WishlistButton';
 
 interface PurchasePanelProps {
@@ -21,7 +23,6 @@ interface PurchasePanelProps {
 }
 
 export function PurchasePanel({ product, compact, headingLevel = 'h1' }: PurchasePanelProps) {
-  const router = useRouter();
   const { addItem } = useCart();
   const [variantId, setVariantId] = useState((product.variants.find((v) => v.inStock) ?? product.variants[0]).id);
   const [quantity, setQuantity] = useState(1);
@@ -35,9 +36,15 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
     window.setTimeout(() => setAdded(false), 1800);
   };
 
+  // Buy Now opens WhatsApp. Without the store's number in site.ts the chat can't be pre-filled,
+  // so the order details are copied for the customer to paste.
+  const message = orderMessage(product, variant, quantity);
   const buyNow = () => {
-    addItem(product.slug, variant.id, quantity, { openDrawer: false });
-    router.push('/checkout');
+    if (site.whatsappNumber) return;
+    navigator.clipboard
+      ?.writeText(message)
+      .then(() => toast.success('Order details copied — paste them in the WhatsApp chat.', { duration: 6000 }))
+      .catch(() => undefined);
   };
 
   return (
@@ -105,10 +112,22 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
           {added ? <Check className="h-5 w-5 shrink-0" /> : <ShoppingCart className="h-5 w-5 shrink-0" />}
           {added ? 'Added' : 'Add to Cart'}
         </Button>
-        <Button size="lg" className="min-w-0 flex-1 px-3 sm:px-6" onClick={buyNow} disabled={!variant.inStock}>
-          <Wallet className="h-5 w-5 shrink-0" />
+        <a
+          href={whatsappOrderLink(message)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={buyNow}
+          aria-disabled={!variant.inStock || undefined}
+          title="Order on WhatsApp"
+          className={cn(
+            buttonVariants({ size: 'lg' }),
+            'min-w-0 flex-1 bg-[#25D366] px-3 text-white hover:bg-[#1DA851] sm:px-6',
+            !variant.inStock && 'pointer-events-none opacity-50',
+          )}
+        >
+          <WhatsAppIcon className="h-5 w-5 shrink-0" />
           Buy Now
-        </Button>
+        </a>
         {!compact && <WishlistButton slug={product.slug} name={product.name} variant="outline" className="shrink-0" />}
       </div>
       {!variant.inStock && <p className="mt-3 text-sm font-medium text-danger">This size is currently sold out.</p>}
@@ -125,7 +144,7 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
             <RotateCcw className="h-5 w-5 shrink-0 text-brand" /> {site.returns.days}-day returns on unopened items
           </li>
           <li className="flex items-center gap-3">
-            <ShieldCheck className="h-5 w-5 shrink-0 text-brand" /> Secure checkout
+            <WhatsAppIcon className="h-5 w-5 shrink-0 text-brand" /> Order on WhatsApp
           </li>
         </ul>
       )}

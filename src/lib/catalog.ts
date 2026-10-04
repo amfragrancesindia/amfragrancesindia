@@ -30,6 +30,8 @@ export interface Product {
   category: Category;
   concentration: string;
   images: string[];
+  /** Optional short product video (/media/v-….mp4), shown after the photos. */
+  video?: string | null;
   variants: Variant[];
   notes: { top: string[]; heart: string[]; base: string[] };
   longevity: string;

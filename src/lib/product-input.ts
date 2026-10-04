@@ -11,6 +11,9 @@ const tags = (label: string) =>
 
 /** Uploaded photos (/media/...) or the photos shipped with the site (/images/...). */
 export const IMAGE_URL = /^\/(?:media\/p-[a-f0-9]{32}\.(?:webp|jpg|png|avif)|images\/[a-z0-9/_-]+\.(?:webp|jpe?g|png|avif))$/;
+/** An uploaded product video. */
+export const VIDEO_URL = /^\/media\/v-[a-f0-9]{32}\.mp4$/;
+export const MAX_PHOTOS = 5;
 
 export const variantInput = z.object({
   id: z.string().regex(/^[a-z0-9-]{1,40}$/, 'Invalid size'),
@@ -39,7 +42,8 @@ export const productInput = z
     gender: z.enum(GENDERS),
     category: z.enum(CATEGORIES),
     concentration: text(40),
-    images: z.array(z.string().regex(IMAGE_URL, 'Invalid photo')).max(12, 'You can add up to 12 photos'),
+    images: z.array(z.string().regex(IMAGE_URL, 'Invalid photo')).max(MAX_PHOTOS, `You can add up to ${MAX_PHOTOS} photos`),
+    video: z.string().regex(VIDEO_URL, 'Invalid video').nullable(),
     variants: z.array(variantInput).max(10, 'You can add up to 10 sizes'),
     notes: z.object({ top: tags('Top notes'), heart: tags('Heart notes'), base: tags('Base notes') }),
     longevity: text(40),
@@ -89,6 +93,7 @@ export function toProductData(p: ProductInput) {
     category: p.category,
     concentration: p.concentration,
     images: p.images,
+    video: p.video,
     // An empty MRP means "no discount": store it equal to the price.
     variants: p.variants.map((v) => ({ id: v.id, size: v.size, price: v.price, mrp: v.mrp > v.price ? v.mrp : v.price, inStock: v.inStock })),
     notes: p.notes,
@@ -117,6 +122,7 @@ export function productToInput(p: Product): ProductInput {
     category: p.category,
     concentration: p.concentration,
     images: p.images,
+    video: p.video ?? null,
     variants: p.variants.map((v) => ({ ...v })),
     notes: { top: [...p.notes.top], heart: [...p.notes.heart], base: [...p.notes.base] },
     longevity: p.longevity,

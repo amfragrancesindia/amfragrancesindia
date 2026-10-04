@@ -12,8 +12,6 @@ const shopLinks = [
   { name: 'Men', href: '/products?gender=men' },
   { name: 'Women', href: '/products?gender=women' },
   { name: 'Unisex', href: '/products?gender=unisex' },
-  { name: 'Attars & Oils', href: '/products?category=attars-oils' },
-  { name: 'Gift Sets', href: '/products?category=gift-set' },
 ];
 
 export function MobileMenu({ open, onClose, signedIn }: { open: boolean; onClose: () => void; signedIn: boolean }) {

@@ -20,7 +20,7 @@ import {
   type Gender,
   type Product,
 } from '@/lib/catalog';
-import { productInput, type ProductInput } from '@/lib/product-input';
+import { MAX_PHOTOS, productInput, type ProductInput } from '@/lib/product-input';
 import { site } from '@/lib/site';
 import { cn, formatDate } from '@/lib/utils';
 import { fieldErrors } from '@/lib/validations';
@@ -28,6 +28,7 @@ import { ConfirmDialog } from './ConfirmDialog';
 import { ImageManager } from './ImageManager';
 import { TagInput } from './TagInput';
 import { VariantsEditor, newVariantDraft, parseRupees, type VariantDraft } from './VariantsEditor';
+import { VideoManager } from './VideoManager';
 
 interface Draft {
   name: string;
@@ -38,6 +39,7 @@ interface Draft {
   category: Category;
   concentration: string;
   images: string[];
+  video: string | null;
   variants: VariantDraft[];
   notes: { top: string[]; heart: string[]; base: string[] };
   longevity: string;
@@ -73,7 +75,8 @@ function toDraft(p?: Product): Draft {
       category: 'perfume',
       concentration: 'Eau de Parfum',
       images: [],
-      variants: [newVariantDraft('50 ml'), newVariantDraft('100 ml')],
+      video: null,
+      variants: [newVariantDraft('100 ml')],
       notes: { top: [], heart: [], base: [] },
       longevity: '',
       sillage: '',
@@ -97,6 +100,7 @@ function toDraft(p?: Product): Draft {
     category: p.category,
     concentration: p.concentration,
     images: [...p.images],
+    video: p.video ?? null,
     variants: p.variants.map((v) => ({
       key: v.id,
       id: v.id,
@@ -143,6 +147,7 @@ function toInput(d: Draft): ProductInput {
     category: d.category,
     concentration: d.concentration.trim(),
     images: d.images,
+    video: d.video,
     variants,
     notes: d.notes,
     longevity: d.longevity.trim(),
@@ -162,6 +167,7 @@ function toInput(d: Draft): ProductInput {
 /** Which card an error belongs to, so the page can scroll to it. */
 function sectionFor(key: string) {
   if (key === 'images') return 'photos';
+  if (key === 'video') return 'video';
   if (key.startsWith('variants')) return 'sizes';
   if (['notes', 'longevity', 'sillage', 'seasons', 'occasions'].some((k) => key.startsWith(k))) return 'profile';
   if (key.startsWith('seo')) return 'seo';
@@ -375,10 +381,10 @@ export function ProductEditor({ product }: { product?: Product }) {
             <div className="space-y-5">
               <Field label="Product name" error={errors.name}>
                 {(id, describedBy) => (
-                  <Input id={id} aria-describedby={describedBy} value={draft.name} onChange={(e) => onName(e.target.value)} placeholder="e.g. Saffron Royale" invalid={!!errors.name} />
+                  <Input id={id} aria-describedby={describedBy} value={draft.name} onChange={(e) => onName(e.target.value)} placeholder="e.g. Royal Oud" invalid={!!errors.name} />
                 )}
               </Field>
-              <Field label="Short description" optional error={errors.tagline} hint="One line under the name, e.g. “Regal saffron, rose and Mysore sandalwood”.">
+              <Field label="Short description" optional error={errors.tagline} hint="One line under the name, e.g. “Smoky oud, saffron and warm amber”.">
                 {(id, describedBy) => (
                   <Input id={id} aria-describedby={describedBy} value={draft.tagline} onChange={(e) => set('tagline', e.target.value)} invalid={!!errors.tagline} />
                 )}
@@ -404,18 +410,22 @@ export function ProductEditor({ product }: { product?: Product }) {
             </div>
           </Card>
 
-          <Card id="photos" title="Photos" description="Upload clear photos of the bottle. You can add up to 12.">
+          <Card id="photos" title="Photos" description={`Upload clear photos of the bottle. You can add up to ${MAX_PHOTOS}.`}>
             <ImageManager images={draft.images} onChange={setImages} productName={draft.name} error={errors.images} />
+          </Card>
+
+          <Card id="video" title="Video" description="Optional: one short video of the product (up to 30 seconds).">
+            <VideoManager video={draft.video} onChange={(v) => set('video', v)} error={errors.video} />
           </Card>
 
           <Card id="sizes" title="Sizes and prices" description="Each size can have its own price and stock status.">
             <VariantsEditor variants={draft.variants} onChange={(v) => set('variants', v)} errors={errors} />
           </Card>
 
-          <Card id="profile" title="Fragrance profile" description="Shown in the “Notes” and “Details” sections of the product page. Press Enter after each note.">
+          <Card id="profile" title="Ingredients & fragrance profile" description="The ingredients customers smell first (top), at the heart, and as it dries down (base), shown on the product page. Press Enter after each one.">
             <div className="grid grid-cols-1 gap-5">
               {(['top', 'heart', 'base'] as const).map((layer) => (
-                <Field key={layer} label={`${layer === 'top' ? 'Top' : layer === 'heart' ? 'Heart' : 'Base'} notes`} optional error={errors[`notes.${layer}`]}>
+                <Field key={layer} label={`${layer === 'top' ? 'Top' : layer === 'heart' ? 'Heart' : 'Base'} notes (ingredients)`} optional error={errors[`notes.${layer}`]}>
                   {(id, describedBy) => (
                     <TagInput
                       id={id}
@@ -582,7 +592,7 @@ export function ProductEditor({ product }: { product?: Product }) {
                 checked={draft.bestseller}
                 onChange={(v) => set('bestseller', v)}
                 label="Bestseller"
-                hint="Shown in the Bestsellers section and first in “Featured” sorting."
+                hint="Listed first in the shop’s “Featured” sorting."
               />
               <Switch
                 checked={draft.featured}
@@ -591,7 +601,7 @@ export function ProductEditor({ product }: { product?: Product }) {
                 hint="The large “Featured” product on the home page. Only one product can be featured."
               />
             </div>
-            <Field label="Release date" className="mt-4" error={errors.releasedAt} hint="Used for “Newest” sorting and New Arrivals.">
+            <Field label="Release date" className="mt-4" error={errors.releasedAt} hint="Used for “Newest” sorting.">
               {(id, describedBy) => (
                 <Input id={id} aria-describedby={describedBy} type="date" value={draft.releasedAt} onChange={(e) => set('releasedAt', e.target.value)} invalid={!!errors.releasedAt} />
               )}

@@ -1,14 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function ProductGallery({ images, name, badge }: { images: string[]; name: string; badge?: string }) {
+interface ProductGalleryProps {
+  images: string[];
+  /** Optional product video, shown as the last slide. */
+  video?: string | null;
+  name: string;
+  badge?: string;
+}
+
+export function ProductGallery({ images, video, name, badge }: ProductGalleryProps) {
   const [index, setIndex] = useState(0);
-  const count = images.length;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoIndex = video ? images.length : -1;
+  const count = images.length + (video ? 1 : 0);
   const go = (delta: number) => setIndex((i) => (i + delta + count) % count);
+
+  // The video plays while its slide is showing and stops when another one is chosen.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (index === videoIndex) void el.play().catch(() => undefined);
+    else el.pause();
+  }, [index, videoIndex]);
 
   return (
     <div className="lg:sticky lg:top-[calc(var(--header-height)+24px)]">
@@ -31,6 +49,24 @@ export function ProductGallery({ images, name, badge }: { images: string[]; name
             aria-hidden={i !== index}
           />
         ))}
+        {video && (
+          <video
+            ref={videoRef}
+            src={video}
+            poster={images[0]}
+            muted
+            loop
+            playsInline
+            controls={index === videoIndex}
+            preload="metadata"
+            aria-label={`${name} — video`}
+            aria-hidden={index !== videoIndex}
+            className={cn(
+              'absolute inset-0 h-full w-full bg-ink object-contain transition-opacity duration-500',
+              index === videoIndex ? 'opacity-100' : 'pointer-events-none opacity-0',
+            )}
+          />
+        )}
         {badge && (
           <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-brand shadow-sm">
             {badge}
@@ -76,6 +112,26 @@ export function ProductGallery({ images, name, badge }: { images: string[]; name
               <Image src={src} alt="" fill sizes="96px" className="object-cover" />
             </button>
           ))}
+          {video && (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={index === videoIndex}
+              aria-label="Play video"
+              onClick={() => setIndex(videoIndex)}
+              className={cn(
+                'relative aspect-square w-20 overflow-hidden rounded-xl bg-ink ring-offset-2 transition sm:w-24',
+                index === videoIndex ? 'ring-2 ring-brand-light' : 'opacity-80 hover:opacity-100',
+              )}
+            >
+              {images[0] && <Image src={images[0]} alt="" fill sizes="96px" className="object-cover opacity-60" />}
+              <span className="absolute inset-0 grid place-items-center">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-ink shadow">
+                  <Play className="ml-0.5 h-4 w-4 fill-current" />
+                </span>
+              </span>
+            </button>
+          )}
         </div>
       )}
     </div>

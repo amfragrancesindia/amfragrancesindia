@@ -103,7 +103,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         />
         <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           {product.images.length > 0 ? (
-            <ProductGallery images={product.images} name={product.name} badge={product.badge} />
+            <ProductGallery images={product.images} video={product.video} name={product.name} badge={product.badge} />
           ) : (
             <div className="grid aspect-square place-items-center rounded-2xl bg-cream text-muted">No photos yet</div>
           )}

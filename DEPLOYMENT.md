@@ -14,7 +14,8 @@ is about 2.6 MB compressed (free limit 3 MB, paid 10 MB).
 1. Cloudflare dashboard → **Storage & databases → D1 SQL Database → Create**, name it `amfragrances`.
 2. Copy its **Database ID** into `wrangler.jsonc` (`d1_databases → database_id`) and commit.
 3. Open the database → **Console** and run each file in `migrations/` in order (`0001_init.sql`,
-   then `0002_products.sql`). The console runs everything as one line, so leave out the `--`
+   `0002_products.sql`, then `0003_product_video.sql`). Run a new migration before deploying the code
+   that needs it. The console runs everything as one line, so leave out the `--`
    comment lines when pasting. (From a computer with Wrangler logged in, `npm run db:migrate:remote`
    applies them all.)
 
@@ -76,12 +77,14 @@ Open `/admin`.
 
 ## 4b. Products
 
-Products are managed in **Admin → Products**: add and edit products, sizes and prices (with MRP),
-stock, photos, notes, labels, the home-page featured product, drafts and SEO text. Changes are live
-immediately.
+Products are managed in **Admin → Products**: add as many as you like, each with sizes in ml and
+prices (with MRP), stock, up to 5 photos, one video of up to 30 seconds (MP4/MOV, max 60 MB),
+ingredients (top, heart and base notes), labels, the home-page featured product, drafts and SEO text.
+Changes are live immediately. Videos are uploaded straight to R2 through `cloudflare-worker.js`
+(`/upload/video`) with a short-lived permit from `/api/admin/media/video`, signed with `AUTH_SECRET`.
 
-The first time, the product list is empty: click **Import the 14 starter products** to load the
-original range (safe to click again — it skips products that already exist). Deleting a product
+The first time, the product list is empty: click **Import the 5 products** to load the
+AM Fragrances collection (Royal Oud, Midnight Noir, Citrus Wood, Ocean Breeze, Velvet Bloom) (safe to click again — it skips products that already exist). Deleting a product
 never changes past orders; they keep their own copy of the name, size and price.
 
 ## 5. Custom domain

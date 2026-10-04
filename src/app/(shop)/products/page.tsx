@@ -12,10 +12,10 @@ import { cn } from '@/lib/utils';
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const COPY: Record<string, { title: string; intro: string }> = {
-  all: { title: 'All Products', intro: 'Eau de parfums, attars and perfume oils crafted in India.' },
-  men: { title: 'Perfumes for Men', intro: 'Bold ouds, smoky woods and refined spice — fragrances with presence.' },
-  women: { title: 'Perfumes for Women', intro: 'Radiant florals, saffron and soft musks for every occasion.' },
-  unisex: { title: 'Unisex Perfumes', intro: 'Signatures made to be shared — amber, saffron and oud.' },
+  all: { title: 'All Products', intro: 'Long-lasting eaux de parfum crafted in India, each in a 100 ml flacon with its own gift box.' },
+  men: { title: 'Perfumes for Men', intro: 'Bold, fresh and confident — fragrances with presence.' },
+  women: { title: 'Perfumes for Women', intro: 'Soft florals and warm musks for every occasion.' },
+  unisex: { title: 'Unisex Perfumes', intro: 'Signatures made to be shared — from smoky oud to sparkling citrus.' },
   'attars-oils': { title: 'Attars & Perfume Oils', intro: 'Alcohol-free attars and oils, distilled the traditional way.' },
   'gift-set': { title: 'Gift Sets', intro: 'Beautifully boxed discovery sets — the perfect gift.' },
 };
@@ -45,7 +45,12 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 
 export default async function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
   const { gender, category, q, sort, activeKey } = readParams(await searchParams);
-  const list = queryProducts(await getStoreProducts(), { gender, category, q, sort });
+  const products = await getStoreProducts();
+  const list = queryProducts(products, { gender, category, q, sort });
+  // Only offer filters that have products (and the one that is open).
+  const filters = SHOP_FILTERS.filter(
+    (f) => f.key === 'all' || f.key === activeKey || queryProducts(products, f.params as Record<string, string>).length > 0,
+  );
   const copy = COPY[activeKey] ?? COPY.all;
 
   const hrefFor = (params: Record<string, string>, keepQuery = true) => {
@@ -68,7 +73,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
 
       <div className="mt-8 flex flex-col gap-4 border-y border-line py-4 lg:flex-row lg:items-center lg:justify-between">
         <nav aria-label="Filter products" className="-mx-4 flex gap-2 overflow-x-auto px-4 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
-          {SHOP_FILTERS.map((f) => {
+          {filters.map((f) => {
             const selected = f.key === activeKey;
             return (
               <Link
@@ -110,7 +115,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
             <SearchX className="h-7 w-7 text-brand" />
           </span>
           <h2 className="mt-5 text-xl font-semibold">No fragrances found</h2>
-          <p className="mt-2 text-muted">Try another filter or search for a note such as oud, rose or saffron.</p>
+          <p className="mt-2 text-muted">Try another filter or search for a note such as oud, vanilla or citrus.</p>
           <ButtonLink href="/products" className="mt-6">
             View all products
           </ButtonLink>

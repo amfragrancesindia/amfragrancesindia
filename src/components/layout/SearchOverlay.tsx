@@ -10,7 +10,7 @@ import { queryProducts, startingVariant } from '@/lib/catalog';
 import { formatPrice } from '@/lib/utils';
 import { Drawer } from './Drawer';
 
-const POPULAR = ['Oud', 'Saffron', 'Rose', 'Attar', 'Jasmine', 'Gift set'];
+const POPULAR = ['Oud', 'Vanilla', 'Citrus', 'Rose', 'Lavender', 'Sea Salt'];
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const router = useRouter();
@@ -46,7 +46,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search perfumes, attars, notes…"
+            placeholder="Search perfumes or notes…"
             aria-label="Search products"
             className="w-full bg-transparent text-xl outline-none placeholder:text-muted/70 sm:text-2xl"
           />

@@ -8,7 +8,7 @@ import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Frequently Asked Questions',
-  description: 'Answers about delivery, payments, returns, our perfumes and attars, and your AM Fragrances account.',
+  description: 'Answers about delivery, payments, returns, our perfumes and your AM Fragrances account.',
   alternates: { canonical: '/faq' },
 };
 
@@ -76,10 +76,9 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
         a: 'Our eaux de parfum typically last 6–12 hours depending on the fragrance, your skin and the weather. Each product page lists its expected longevity.',
       },
       {
-        q: 'What is the difference between an attar and an eau de parfum?',
-        a: 'An attar is a concentrated, alcohol-free perfume oil applied in small drops and worn close to the skin. An eau de parfum is an alcohol-based spray that projects more and suits everyday wear.',
+        q: 'Which fragrance should I choose?',
+        a: 'For evenings and celebrations, try the deep Royal Oud or Midnight Noir. For fresh everyday wear, Citrus Wood or Ocean Breeze. Velvet Bloom is a soft, romantic floral. Not sure? Message us on WhatsApp and we will help you choose.',
       },
-      { q: 'Can I try several fragrances before choosing?', a: 'Yes — our Discovery Set includes six of our most-loved eaux de parfum in 10 ml or 15 ml sizes.' },
       { q: 'How should I store my perfume?', a: 'Keep bottles closed, upright and away from direct sunlight, heat and humidity — a drawer or cupboard is ideal.' },
     ],
   },

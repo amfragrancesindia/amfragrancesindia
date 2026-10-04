@@ -5,9 +5,9 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { ArrowLeft, ArrowRight, ImagePlus, Loader2, Star, X } from 'lucide-react';
 import { compressImage } from '@/lib/image-compress';
+import { MAX_PHOTOS } from '@/lib/product-input';
 import { cn } from '@/lib/utils';
 
-const MAX_PHOTOS = 12;
 const MAX_ORIGINAL_BYTES = 25 * 1024 * 1024;
 const ACCEPT = 'image/jpeg,image/png,image/webp,image/avif';
 

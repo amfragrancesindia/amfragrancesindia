@@ -151,6 +151,8 @@ model Product {
   concentration  String   @default("")
   /// Photo URLs in display order (the first one is the main photo).
   images         Json
+  /// Optional short product video (/media/v-….mp4, up to 30 seconds).
+  video          String?
   /// [{ id, size, price, mrp, inStock }] — `id` is what carts and orders reference.
   variants       Json
   /// { top: string[], heart: string[], base: string[] }
