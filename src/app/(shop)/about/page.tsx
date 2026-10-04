@@ -32,7 +32,7 @@ export default async function AboutPage() {
       <section className="relative isolate overflow-hidden bg-[#140D08] text-white">
         <Image
           src="/images/am/banners/hero-film.webp"
-          alt="Royal Oud eau de parfum in a glowing Mughal archway"
+          alt="Citrus Wood eau de parfum in a glowing Mughal archway"
           fill
           priority
           sizes="100vw"

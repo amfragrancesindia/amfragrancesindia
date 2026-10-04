@@ -20,7 +20,7 @@ export function Hero() {
           src="/images/am/banners/hero-film-mobile.webp"
           width={1080}
           height={1920}
-          alt="Royal Oud eau de parfum standing in a glowing Mughal archway"
+          alt="Citrus Wood eau de parfum standing in a glowing Mughal archway"
           fetchPriority="high"
           decoding="async"
           className={FRAME}
@@ -47,8 +47,8 @@ export function Hero() {
             <ButtonLink href="/products" variant="light" size="lg">
               Shop the Collection
             </ButtonLink>
-            <ButtonLink href="/products/royal-oud" variant="outline-light" size="lg">
-              Discover Royal Oud
+            <ButtonLink href="/products/citrus-wood" variant="outline-light" size="lg">
+              Discover Citrus Wood
             </ButtonLink>
           </div>
         </div>

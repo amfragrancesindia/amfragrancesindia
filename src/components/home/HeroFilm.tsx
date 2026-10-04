@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils';
 // Same rule as the poster <picture> in Hero: the wide film from tablet size up, unless the window is
 // clearly portrait (taller than 6:5), where the tall film fits better.
 const WIDE_QUERY = '(min-width: 768px) and (min-aspect-ratio: 5/6)';
-// Served from public/videos by cloudflare-worker.js, with the byte ranges Safari needs.
-const FILMS = { wide: '/film?v=wide', tall: '/film?v=tall' };
+// Served from public/videos by cloudflare-worker.js, with the byte ranges Safari needs. Browsers keep
+// the film for a day, so `r` changes whenever the film does (the Worker ignores it).
+const FILMS = { wide: '/film?v=wide&r=citrus', tall: '/film?v=tall&r=citrus' };
 
 /**
  * The home-banner film: a silent, looping 3D product film (the cap lifts off, the bottle tips and a
