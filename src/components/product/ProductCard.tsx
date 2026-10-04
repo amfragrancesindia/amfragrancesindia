@@ -4,7 +4,7 @@ import { isInStock, startingVariant, type Product } from '@/lib/catalog';
 import { Price } from '@/components/ui/Price';
 import { cn } from '@/lib/utils';
 import { orderMessage } from '@/lib/whatsapp';
-import { WhatsAppBuyButton } from './WhatsAppBuyButton';
+import { ProductCardActions } from './ProductCardActions';
 import { WishlistButton } from './WishlistButton';
 
 interface ProductCardProps {
@@ -60,9 +60,17 @@ export function ProductCard({ product, priority, className }: ProductCardProps) 
             {product.name}
           </Link>
         </h3>
-        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
+        <div className="mt-auto pt-2">
           <Price price={variant.price} mrp={variant.mrp} size="sm" />
-          {inStock && <WhatsAppBuyButton message={orderMessage(product, variant, 1)} name={product.name} />}
+          {inStock && (
+            <ProductCardActions
+              slug={product.slug}
+              variantId={variant.id}
+              name={product.name}
+              message={orderMessage(product, variant, 1)}
+              className="mt-3"
+            />
+          )}
         </div>
       </div>
     </article>

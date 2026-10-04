@@ -12,7 +12,7 @@ import { getVariant, type Product } from '@/lib/catalog';
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import { orderMessage, whatsappOrderLink } from '@/lib/whatsapp';
-import { copyOrderForChat } from './WhatsAppBuyButton';
+import { copyOrderForChat } from './ProductCardActions';
 import { WishlistButton } from './WishlistButton';
 
 interface PurchasePanelProps {
