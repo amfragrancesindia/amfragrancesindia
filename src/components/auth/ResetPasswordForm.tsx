@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { Button, ButtonLink } from '@/components/ui/Button';
-import { Field, Input } from '@/components/ui/Field';
+import { Field } from '@/components/ui/Field';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { fieldErrors, resetPasswordSchema } from '@/lib/validations';
 
 export function ResetPasswordForm({ email, token }: { email: string; token: string }) {
@@ -64,14 +65,13 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
       )}
       <Field label="New password" error={errors.password} hint="At least 8 characters, with upper & lowercase letters and a number.">
         {(id, d) => (
-          <Input id={id} type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} invalid={!!errors.password} aria-describedby={d} />
+          <PasswordInput id={id} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} invalid={!!errors.password} aria-describedby={d} />
         )}
       </Field>
       <Field label="Confirm new password" error={errors.confirmPassword}>
         {(id, d) => (
-          <Input
+          <PasswordInput
             id={id}
-            type="password"
             autoComplete="new-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

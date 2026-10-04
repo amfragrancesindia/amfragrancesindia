@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
-import { Field, Input } from '@/components/ui/Field';
+import { Field } from '@/components/ui/Field';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { changePasswordSchema, fieldErrors } from '@/lib/validations';
 
 const EMPTY = { currentPassword: '', newPassword: '', confirmPassword: '' };
@@ -50,13 +51,13 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={onSubmit} noValidate className="max-w-md space-y-5">
       <Field label="Current password" error={errors.currentPassword}>
-        {(id, d) => <Input id={id} type="password" autoComplete="current-password" value={form.currentPassword} onChange={set('currentPassword')} invalid={!!errors.currentPassword} aria-describedby={d} />}
+        {(id, d) => <PasswordInput id={id} autoComplete="current-password" value={form.currentPassword} onChange={set('currentPassword')} invalid={!!errors.currentPassword} aria-describedby={d} />}
       </Field>
       <Field label="New password" error={errors.newPassword} hint="At least 8 characters, with upper & lowercase letters and a number.">
-        {(id, d) => <Input id={id} type="password" autoComplete="new-password" value={form.newPassword} onChange={set('newPassword')} invalid={!!errors.newPassword} aria-describedby={d} />}
+        {(id, d) => <PasswordInput id={id} autoComplete="new-password" value={form.newPassword} onChange={set('newPassword')} invalid={!!errors.newPassword} aria-describedby={d} />}
       </Field>
       <Field label="Confirm new password" error={errors.confirmPassword}>
-        {(id, d) => <Input id={id} type="password" autoComplete="new-password" value={form.confirmPassword} onChange={set('confirmPassword')} invalid={!!errors.confirmPassword} aria-describedby={d} />}
+        {(id, d) => <PasswordInput id={id} autoComplete="new-password" value={form.confirmPassword} onChange={set('confirmPassword')} invalid={!!errors.confirmPassword} aria-describedby={d} />}
       </Field>
       <Button type="submit" loading={loading}>
         Update password

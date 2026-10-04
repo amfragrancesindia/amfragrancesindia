@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { safeRedirect } from '@/lib/utils';
 import { fieldErrors, loginSchema } from '@/lib/validations';
 import { GoogleIcon } from './AuthCard';
@@ -21,7 +21,6 @@ export function LoginForm({ callbackUrl, googleEnabled, initialError }: { callba
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [show, setShow] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState(initialError ? ERRORS[initialError] ?? 'Sign-in failed. Please try again.' : '');
   const [loading, setLoading] = useState(false);
@@ -78,26 +77,14 @@ export function LoginForm({ callbackUrl, googleEnabled, initialError }: { callba
         </Field>
         <Field label="Password" error={errors.password}>
           {(id, d) => (
-            <div className="relative">
-              <Input
-                id={id}
-                type={show ? 'text' : 'password'}
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                invalid={!!errors.password}
-                aria-describedby={d}
-                className="pr-12"
-              />
-              <button
-                type="button"
-                onClick={() => setShow((s) => !s)}
-                className="absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-ink"
-                aria-label={show ? 'Hide password' : 'Show password'}
-              >
-                {show ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
-              </button>
-            </div>
+            <PasswordInput
+              id={id}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              invalid={!!errors.password}
+              aria-describedby={d}
+            />
           )}
         </Field>
         <div className="flex justify-end">

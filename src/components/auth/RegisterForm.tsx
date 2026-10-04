@@ -7,6 +7,7 @@ import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { Field, Input } from '@/components/ui/Field';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import { safeRedirect } from '@/lib/utils';
 import { fieldErrors, registerSchema } from '@/lib/validations';
 import { GoogleIcon } from './AuthCard';
@@ -87,12 +88,12 @@ export function RegisterForm({ callbackUrl, googleEnabled }: { callbackUrl?: str
         </Field>
         <Field label="Password" error={errors.password} hint="At least 8 characters, with upper & lowercase letters and a number.">
           {(id, d) => (
-            <Input id={id} type="password" autoComplete="new-password" value={form.password} onChange={set('password')} invalid={!!errors.password} aria-describedby={d} />
+            <PasswordInput id={id} autoComplete="new-password" value={form.password} onChange={set('password')} invalid={!!errors.password} aria-describedby={d} />
           )}
         </Field>
         <Field label="Confirm password" error={errors.confirmPassword}>
           {(id, d) => (
-            <Input id={id} type="password" autoComplete="new-password" value={form.confirmPassword} onChange={set('confirmPassword')} invalid={!!errors.confirmPassword} aria-describedby={d} />
+            <PasswordInput id={id} autoComplete="new-password" value={form.confirmPassword} onChange={set('confirmPassword')} invalid={!!errors.confirmPassword} aria-describedby={d} />
           )}
         </Field>
         <p className="text-[13px] text-muted">
