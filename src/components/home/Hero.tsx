@@ -1,4 +1,3 @@
-import { ButtonLink } from '@/components/ui/Button';
 import { HeroFilm } from './HeroFilm';
 
 // The poster and the film share one frame, so the film lines up with the poster exactly. Portrait
@@ -43,14 +42,6 @@ export function Hero() {
           <p className="mt-5 max-w-md text-[16px] leading-relaxed text-white/75 sm:text-[17px]">
             Long-lasting eaux de parfum, from deep Royal Oud to fresh Ocean Breeze — made for the moments you want to be remembered.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href="/products" variant="light" size="lg">
-              Shop the Collection
-            </ButtonLink>
-            <ButtonLink href="/products/citrus-wood" variant="outline-light" size="lg">
-              Discover Citrus Wood
-            </ButtonLink>
-          </div>
         </div>
       </div>
     </section>
