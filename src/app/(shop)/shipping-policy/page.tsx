@@ -5,23 +5,21 @@ import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Shipping Policy',
-  description: `Delivery times, shipping charges and tracking for AM Fragrances orders across India. Free shipping above ₹${site.shipping.freeThreshold}.`,
+  description: 'Delivery times and tracking for AM Fragrances orders across India.',
   alternates: { canonical: '/shipping-policy' },
 };
 
 export default function ShippingPolicyPage() {
-  const free = `₹${site.shipping.freeThreshold.toLocaleString('en-IN')}`;
   return (
     <PolicyPage title="Shipping Policy" intro="How and when your fragrances reach you.">
       <h2>Where we deliver</h2>
       <p>We currently ship to addresses across India. We do not ship internationally at this time.</p>
 
-      <h2>Shipping charges</h2>
-      <ul>
-        <li>Free shipping on all orders above {free} (after any discounts).</li>
-        <li>A flat shipping fee of ₹{site.shipping.fee} applies to orders below {free}.</li>
-        <li>The exact amount is always shown in your cart and at checkout before you pay.</li>
-      </ul>
+      <h2>Ordering</h2>
+      <p>
+        Orders are placed on <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>. We confirm the products,
+        your delivery address and the amount to pay in the chat before your order is dispatched.
+      </p>
 
       <h2>Dispatch and delivery times</h2>
       <ul>
@@ -32,13 +30,7 @@ export default function ShippingPolicyPage() {
       <p>Delivery estimates are not guaranteed and may be affected by weather, courier delays or restrictions on shipping fragrances to certain areas.</p>
 
       <h2>Tracking your order</h2>
-      <p>
-        When your order ships we email you the courier name and tracking number. If you placed the order while signed in, you can also
-        see its status under <Link href="/account/orders">My Account → Orders</Link>.
-      </p>
-
-      <h2>Cash on Delivery</h2>
-      <p>Cash on Delivery is available for most PIN codes. Please keep the exact amount or a UPI app ready when the courier arrives.</p>
+      <p>When your order ships we send you the courier name and tracking number on WhatsApp.</p>
 
       <h2>Damaged or missing parcels</h2>
       <p>

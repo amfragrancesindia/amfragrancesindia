@@ -85,10 +85,12 @@ export function OrderReceiptView({ orderNumber }: { orderNumber: string }) {
                 <dd>−{formatPrice(receipt.discount)}</dd>
               </div>
             )}
-            <div className="flex justify-between">
-              <dt className="text-ink/70">Shipping</dt>
-              <dd>{receipt.shipping ? formatPrice(receipt.shipping) : 'Free'}</dd>
-            </div>
+            {receipt.shipping > 0 && (
+              <div className="flex justify-between">
+                <dt className="text-ink/70">Delivery</dt>
+                <dd>{formatPrice(receipt.shipping)}</dd>
+              </div>
+            )}
             <div className="flex justify-between border-t border-line pt-3 text-lg font-semibold">
               <dt>Total</dt>
               <dd>{formatPrice(receipt.total)}</dd>

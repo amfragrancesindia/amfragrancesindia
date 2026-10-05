@@ -77,12 +77,13 @@ export function ProductDetails({ product }: { product: Product }) {
       <Section title="Shipping & returns">
         <ul className="list-disc space-y-1.5 pl-5 marker:text-gold">
           <li>
-            Free shipping on orders above ₹{site.shipping.freeThreshold.toLocaleString('en-IN')}; ₹{site.shipping.fee} otherwise.
-          </li>
-          <li>
             Dispatched within {site.shipping.dispatch}; delivered in {site.shipping.delivery} across India.
           </li>
-          <li>{site.onlinePayments ? 'Cash on Delivery and secure online payment available.' : 'Cash on Delivery available, or order on WhatsApp.'}</li>
+          <li>
+            {site.onlinePayments
+              ? 'Order on WhatsApp, or pay securely online.'
+              : 'Order on WhatsApp: we confirm your order and share the payment details in the chat.'}
+          </li>
           <li>
             Returns accepted within {site.returns.days} days of delivery for unused, sealed products. See our{' '}
             <a href="/refund-policy" className="font-medium text-brand underline underline-offset-4">

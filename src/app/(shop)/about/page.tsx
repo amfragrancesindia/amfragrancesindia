@@ -19,7 +19,7 @@ const values = [
   { Icon: Flower2, title: 'Heritage ingredients', text: 'Oud, saffron, rose, jasmine, vanilla and sandalwood — fine ingredients sit at the heart of every blend.' },
   { Icon: Gem, title: 'Crafted to last', text: 'Rich eau de parfum concentrations, balanced to wear beautifully in the Indian climate from morning to night.' },
   { Icon: Feather, title: 'Modern elegance', text: 'Traditional craft meets contemporary composition, so each fragrance feels both familiar and new.' },
-  { Icon: HandHeart, title: 'Honest luxury', text: 'Clear MRP pricing inclusive of all taxes, cash on delivery, ordering on WhatsApp and easy returns on sealed products.' },
+  { Icon: HandHeart, title: 'Honest luxury', text: 'Clear MRP pricing inclusive of all taxes, personal ordering on WhatsApp and easy returns on sealed products.' },
 ];
 
 // The collection strip comes from the database.
@@ -68,7 +68,7 @@ export default async function AboutPage() {
               climate and to leave a trail that is noticed, remembered and loved.
             </p>
             <p>
-              We believe luxury should also feel effortless: transparent pricing, careful packaging, cash on delivery and a team that is
+              We believe luxury should also feel effortless: transparent pricing, careful packaging, easy ordering on WhatsApp and a team that is
               always happy to help you find your signature scent.
             </p>
           </div>

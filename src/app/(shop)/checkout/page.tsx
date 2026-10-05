@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { getSessionUser } from '@/lib/auth';
@@ -13,6 +14,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function CheckoutPage() {
   const capabilities = checkoutCapabilities();
+  // Without online payment there is nothing to pay here: orders are placed on WhatsApp from the cart.
+  if (!capabilities.online) redirect('/cart');
   const user = await getSessionUser();
 
   return (

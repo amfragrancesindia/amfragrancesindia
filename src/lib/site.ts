@@ -26,12 +26,12 @@ export const site = {
     instagramHandle: '@amfragrancesindia',
   },
   // Online payment (UPI, cards, net banking) through Razorpay. Switch this on once the Razorpay keys
-  // are set (DEPLOYMENT.md, section 3), so the home page, cart, footer and FAQ mention it. Checkout
-  // itself only ever offers the payment options that are really configured.
+  // are set (DEPLOYMENT.md, section 3): the cart then offers "Pay online" (checkout) next to ordering
+  // on WhatsApp, and the footer and FAQ mention it. Without it, orders are placed on WhatsApp.
   onlinePayments: false as boolean,
   shipping: {
-    freeThreshold: 1999,
-    fee: 99,
+    // Delivery charge per order, added to cart and WhatsApp order totals (0 = no charge).
+    fee: 0,
     dispatch: '1–2 business days',
     delivery: '3–7 business days',
     metroDelivery: '2–4 business days',

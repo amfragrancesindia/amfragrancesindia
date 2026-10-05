@@ -1,5 +1,6 @@
-// Ordering on WhatsApp: the "Buy Now" button opens a chat with the store.
+// Ordering on WhatsApp: "Buy Now" and the cart open a chat with the store.
 import type { Product, Variant } from './catalog';
+import type { PricedLine, Totals } from './pricing';
 import { site } from './site';
 import { absoluteUrl, formatPrice } from './utils';
 
@@ -10,6 +11,20 @@ export function orderMessage(product: Product, variant: Variant, quantity: numbe
     `${product.name} — ${[variant.size, product.concentration].filter(Boolean).join(' ')} × ${quantity}`,
     `Price: ${formatPrice(variant.price * quantity)}`,
     absoluteUrl(`/products/${product.slug}`),
+  ].join('\n');
+}
+
+/** The order message for everything in the cart, with the coupon and total the cart shows. */
+export function cartOrderMessage(
+  lines: Array<Pick<PricedLine, 'name' | 'size' | 'concentration' | 'quantity' | 'lineTotal'>>,
+  totals: Pick<Totals, 'subtotal' | 'discount' | 'couponCode' | 'shipping' | 'total'>,
+): string {
+  return [
+    `Hello ${site.name}, I would like to order:`,
+    ...lines.map((l, i) => `${i + 1}. ${l.name} — ${[l.size, l.concentration].filter(Boolean).join(' ')} × ${l.quantity}: ${formatPrice(l.lineTotal)}`),
+    ...(totals.discount > 0 ? [`Subtotal: ${formatPrice(totals.subtotal)}`, `Coupon ${totals.couponCode}: −${formatPrice(totals.discount)}`] : []),
+    ...(totals.shipping > 0 ? [`Delivery: ${formatPrice(totals.shipping)}`] : []),
+    `Total: ${formatPrice(totals.total)}`,
   ].join('\n');
 }
 

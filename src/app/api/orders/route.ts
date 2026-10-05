@@ -56,10 +56,10 @@ export async function POST(req: Request) {
 
   const caps = checkoutCapabilities();
   if (input.paymentMethod === 'ONLINE' && !caps.online) {
-    return NextResponse.json({ error: 'Online payment is not available right now. Please choose Cash on Delivery.' }, { status: 400 });
+    return NextResponse.json({ error: 'Online payment is not available right now. Please order on WhatsApp.' }, { status: 400 });
   }
   if (input.paymentMethod === 'COD' && !caps.cod) {
-    return NextResponse.json({ error: 'We can’t take orders online right now. Please contact us to order.' }, { status: 503 });
+    return NextResponse.json({ error: 'Cash on Delivery isn’t available. Please order on WhatsApp.' }, { status: 400 });
   }
 
   // A retry of a request that already created an order (for example after a
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
     } catch (error) {
       console.error('[orders] Razorpay order creation failed', error);
       return NextResponse.json(
-        { error: 'The payment service is not responding. Please try again or choose Cash on Delivery.' },
+        { error: 'The payment service is not responding. Please try again or order on WhatsApp.' },
         { status: 502 },
       );
     }

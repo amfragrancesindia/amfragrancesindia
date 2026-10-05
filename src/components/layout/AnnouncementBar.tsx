@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 export function AnnouncementBar({ hidden }: { hidden?: boolean }) {
@@ -11,11 +10,7 @@ export function AnnouncementBar({ hidden }: { hidden?: boolean }) {
       )}
     >
       <p className="container-x flex h-9 items-center justify-center gap-2 text-center text-[12.5px] tracking-wide">
-        <span>Free shipping on orders above ₹{site.shipping.freeThreshold.toLocaleString('en-IN')}</span>
-        <span className="hidden text-white/50 sm:inline" aria-hidden>
-          ·
-        </span>
-        <span className="hidden sm:inline">
+        <span>
           Use code{' '}
           <Link href="/products" className="font-semibold text-gold-soft underline-offset-2 hover:underline">
             WELCOME10

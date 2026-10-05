@@ -235,7 +235,7 @@ export function CheckoutForm({ cod, online, signedIn, defaultEmail, defaultName 
       },
     });
     rzp.on('payment.failed', (response) => {
-      toast.error(response.error?.description || 'Payment failed. Please try again or choose Cash on Delivery.');
+      toast.error(response.error?.description || 'Payment failed. Please try again or order on WhatsApp.');
     });
     rzp.open();
   };

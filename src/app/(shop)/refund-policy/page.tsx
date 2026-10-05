@@ -40,9 +40,8 @@ export default function RefundPolicyPage() {
       <h2>Refunds</h2>
       <ul>
         <li>Approved refunds are issued within 5–7 business days of inspection.</li>
-        <li>Online payments are refunded to the original payment method; your bank may take a few more days to show the credit.</li>
-        <li>Cash on Delivery orders are refunded by UPI or bank transfer to details you provide.</li>
-        <li>Original shipping charges are non-refundable unless the return is due to our error.</li>
+        <li>Refunds are made by UPI or bank transfer to details you provide; card and online payments are refunded to the original payment method, and your bank may take a few more days to show the credit.</li>
+        <li>Original delivery charges, if any, are non-refundable unless the return is due to our error.</li>
       </ul>
 
       <h2>Cancellations</h2>

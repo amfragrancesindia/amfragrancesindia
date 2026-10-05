@@ -38,7 +38,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const copy = COPY[activeKey] ?? COPY.all;
   return {
     title: copy.title,
-    description: `${copy.intro} Shop luxury fragrances from AM Fragrances with free shipping above ₹1,999.`,
+    description: `${copy.intro} Shop luxury fragrances from AM Fragrances and order on WhatsApp.`,
     alternates: { canonical: activeKey === 'all' ? '/products' : `/products?${new URLSearchParams(SHOP_FILTERS.find((f) => f.key === activeKey)?.params as Record<string, string>)}` },
   };
 }

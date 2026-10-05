@@ -15,12 +15,12 @@ export function OrderTotals({ totals }: { totals: Totals }) {
           <dd className="font-medium">−{formatPrice(totals.discount)}</dd>
         </div>
       )}
-      <div className="flex justify-between">
-        <dt className="text-ink/70">Shipping</dt>
-        <dd className={totals.shipping === 0 ? 'font-medium text-success' : 'font-medium'}>
-          {totals.shipping === 0 ? 'Free' : formatPrice(totals.shipping)}
-        </dd>
-      </div>
+      {totals.shipping > 0 && (
+        <div className="flex justify-between">
+          <dt className="text-ink/70">Delivery</dt>
+          <dd className="font-medium">{formatPrice(totals.shipping)}</dd>
+        </div>
+      )}
       <div className="flex items-baseline justify-between border-t border-line pt-3.5">
         <dt className="text-base font-semibold">Total</dt>
         <dd className="text-2xl font-semibold">{formatPrice(totals.total)}</dd>

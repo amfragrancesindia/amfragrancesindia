@@ -1,25 +1,11 @@
 'use client';
 
-import toast from 'react-hot-toast';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { buttonVariants } from '@/components/ui/Button';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
-import { site } from '@/lib/site';
+import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
 import { cn } from '@/lib/utils';
-import { whatsappOrderLink } from '@/lib/whatsapp';
-
-/**
- * Without the store's number in site.ts the WhatsApp chat can't be pre-filled, so the order
- * details are copied for the customer to paste. Call it from the click that opens the chat.
- */
-export function copyOrderForChat(message: string) {
-  if (site.whatsappNumber) return;
-  navigator.clipboard
-    ?.writeText(message)
-    .then(() => toast.success('Order details copied — paste them in the WhatsApp chat.', { duration: 6000 }))
-    .catch(() => undefined);
-}
 
 interface ProductCardActionsProps {
   slug: string;
@@ -44,17 +30,10 @@ export function ProductCardActions({ slug, variantId, name, message, className }
           <ShoppingCart className="h-4 w-4 shrink-0" />
           Add to Cart<span className="sr-only">: {name}</span>
         </button>
-        <a
-          href={whatsappOrderLink(message)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => copyOrderForChat(message)}
-          title="Order on WhatsApp"
-          className={cn(button, 'bg-[#25D366] text-white hover:bg-[#1DA851]')}
-        >
+        <WhatsAppOrderLink message={message} title="Order on WhatsApp" className={cn(button, 'bg-[#25D366] text-white hover:bg-[#1DA851]')}>
           <WhatsAppIcon className="h-4 w-4 shrink-0" />
           Buy Now<span className="sr-only">: {name} on WhatsApp</span>
-        </a>
+        </WhatsAppOrderLink>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export default function TermsPage() {
       <h2>Products and pricing</h2>
       <ul>
         <li>All prices are in Indian Rupees and are MRP, inclusive of all applicable taxes.</li>
-        <li>Shipping charges, if any, are shown in your cart and at checkout before you pay.</li>
+        <li>Delivery charges, if any, are confirmed with you before you pay.</li>
         <li>
           We try to describe and display products accurately. Colours of bottles and packaging may vary slightly from images, and
           fragrance can smell different on different skin.
@@ -36,8 +36,8 @@ export default function TermsPage() {
 
       <h2>Payments</h2>
       <p>
-        Online payments are processed securely by Razorpay. For Cash on Delivery orders, please pay the courier the amount shown in your
-        order confirmation.
+        Orders are confirmed on WhatsApp, where we share the payment details (UPI or bank transfer) before dispatch. Online payments, where
+        offered, are processed securely by Razorpay.
       </p>
 
       <h2>Coupons</h2>

@@ -133,7 +133,7 @@ function orderTable(o: OrderEmailData): string {
     ${rows}
     ${line('Subtotal', formatPrice(o.subtotal))}
     ${o.discount ? line('Discount', `−${formatPrice(o.discount)}`) : ''}
-    ${line('Shipping', o.shipping ? formatPrice(o.shipping) : 'Free')}
+    ${o.shipping ? line('Delivery', formatPrice(o.shipping)) : ''}
     ${line('Total (incl. GST)', formatPrice(o.total), true)}
   </table>`;
 }

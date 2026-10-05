@@ -4,13 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Lock, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
-import { ButtonLink } from '@/components/ui/Button';
+import { ButtonLink, buttonVariants } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
 import { site } from '@/lib/site';
-import { formatPrice } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
+import { cartOrderMessage } from '@/lib/whatsapp';
 import { CatalogErrorNotice } from './CatalogErrorNotice';
 import { CouponForm } from './CouponForm';
-import { FreeShippingMeter } from './FreeShippingMeter';
 import { OrderTotals } from './OrderTotals';
 
 export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
@@ -52,10 +54,7 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
   return (
     <div className="mt-8 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
       <section aria-label="Cart items">
-        <div className="rounded-2xl border border-line p-4 sm:p-5">
-          <FreeShippingMeter remaining={totals.amountToFreeShipping} />
-        </div>
-        <ul className="mt-4 divide-y divide-line rounded-2xl border border-line">
+        <ul className="divide-y divide-line rounded-2xl border border-line">
           {lines.map((line) => (
             <li key={line.key} className="flex gap-4 p-4 sm:gap-6 sm:p-5">
               <Link href={`/products/${line.slug}`} className="relative h-28 w-24 shrink-0 overflow-hidden rounded-xl bg-cream sm:h-32 sm:w-28">
@@ -104,12 +103,18 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
         <div className="mt-6">
           <OrderTotals totals={totals} />
         </div>
-        <ButtonLink href="/checkout" size="lg" className="mt-6 w-full">
-          <Lock className="h-4 w-4" /> Proceed to Checkout
-        </ButtonLink>
-        <p className="mt-3 text-center text-[12.5px] text-muted">
-          {site.onlinePayments ? 'UPI · Cards · Net Banking · Cash on Delivery' : 'Cash on Delivery · Pay in cash or by UPI on delivery'}
-        </p>
+        <WhatsAppOrderLink
+          message={cartOrderMessage(lines, totals)}
+          className={cn(buttonVariants({ size: 'lg' }), 'mt-6 w-full bg-[#25D366] text-white hover:bg-[#1DA851]')}
+        >
+          <WhatsAppIcon className="h-5 w-5 shrink-0" /> Order on WhatsApp
+        </WhatsAppOrderLink>
+        {site.onlinePayments && (
+          <ButtonLink href="/checkout" variant="dark" size="lg" className="mt-3 w-full">
+            <Lock className="h-4 w-4" /> Pay online
+          </ButtonLink>
+        )}
+        <p className="mt-3 text-center text-[12.5px] text-muted">We confirm your order on WhatsApp and share the payment details there.</p>
       </aside>
     </div>
   );

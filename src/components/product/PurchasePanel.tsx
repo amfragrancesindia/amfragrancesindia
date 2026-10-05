@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Check, RotateCcw, ShoppingCart, Truck, Wallet } from 'lucide-react';
+import { Check, Gift, RotateCcw, ShoppingCart, Truck } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { Button, buttonVariants } from '@/components/ui/Button';
 import { Price } from '@/components/ui/Price';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
 import { getVariant, type Product } from '@/lib/catalog';
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
-import { orderMessage, whatsappOrderLink } from '@/lib/whatsapp';
-import { copyOrderForChat } from './ProductCardActions';
+import { orderMessage } from '@/lib/whatsapp';
 import { WishlistButton } from './WishlistButton';
 
 interface PurchasePanelProps {
@@ -104,11 +104,8 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
           {added ? <Check className="h-5 w-5 shrink-0" /> : <ShoppingCart className="h-5 w-5 shrink-0" />}
           {added ? 'Added' : 'Add to Cart'}
         </Button>
-        <a
-          href={whatsappOrderLink(message)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => copyOrderForChat(message)}
+        <WhatsAppOrderLink
+          message={message}
           aria-disabled={!variant.inStock || undefined}
           title="Order on WhatsApp"
           className={cn(
@@ -119,7 +116,7 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
         >
           <WhatsAppIcon className="h-5 w-5 shrink-0" />
           Buy Now
-        </a>
+        </WhatsAppOrderLink>
         {!compact && <WishlistButton slug={product.slug} name={product.name} variant="outline" className="shrink-0" />}
       </div>
       {!variant.inStock && <p className="mt-3 text-sm font-medium text-danger">This size is currently sold out.</p>}
@@ -127,10 +124,10 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
       {!compact && (
         <ul className="mt-8 grid grid-cols-1 gap-3 rounded-2xl border border-line bg-cream/60 p-5 text-[14px] text-ink/80 sm:grid-cols-2">
           <li className="flex items-center gap-3">
-            <Truck className="h-5 w-5 shrink-0 text-brand" /> Free shipping above ₹{site.shipping.freeThreshold.toLocaleString('en-IN')}
+            <Truck className="h-5 w-5 shrink-0 text-brand" /> Delivered across India in {site.shipping.delivery}
           </li>
           <li className="flex items-center gap-3">
-            <Wallet className="h-5 w-5 shrink-0 text-brand" /> Cash on Delivery available
+            <Gift className="h-5 w-5 shrink-0 text-brand" /> Comes in its own gift box
           </li>
           <li className="flex items-center gap-3">
             <RotateCcw className="h-5 w-5 shrink-0 text-brand" /> {site.returns.days}-day returns on unopened items

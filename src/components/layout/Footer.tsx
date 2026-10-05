@@ -110,7 +110,7 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {site.legalName}. All rights reserved.
           </p>
-          <p>{site.onlinePayments ? 'Secure payments · UPI · Cards · Net Banking · Cash on Delivery' : 'Cash on Delivery across India'}</p>
+          <p>{site.onlinePayments ? 'Order on WhatsApp · Secure online payments · UPI · Cards' : 'Order on WhatsApp · Delivered across India'}</p>
         </div>
       </div>
     </footer>

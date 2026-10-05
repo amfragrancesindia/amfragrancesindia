@@ -112,7 +112,6 @@ export interface Totals {
   gstIncluded: number;
   couponCode?: string;
   couponError?: string;
-  amountToFreeShipping: number;
 }
 
 export function computeTotals(lines: PricedLine[], couponCode?: string | null): Totals {
@@ -121,8 +120,7 @@ export function computeTotals(lines: PricedLine[], couponCode?: string | null): 
   const itemCount = lines.reduce((sum, l) => sum + l.quantity, 0);
   const { discount, coupon, error } = evaluateCoupon(couponCode, subtotal);
   const afterDiscount = subtotal - discount;
-  const { freeThreshold, fee } = site.shipping;
-  const shipping = subtotal === 0 || afterDiscount >= freeThreshold ? 0 : fee;
+  const shipping = subtotal === 0 ? 0 : site.shipping.fee;
   const total = afterDiscount + shipping;
   return {
     itemCount,
@@ -134,6 +132,5 @@ export function computeTotals(lines: PricedLine[], couponCode?: string | null): 
     gstIncluded: Math.round(total - total / (1 + GST_RATE)),
     couponCode: discount > 0 ? coupon?.code : undefined,
     couponError: error,
-    amountToFreeShipping: subtotal === 0 ? freeThreshold : Math.max(0, freeThreshold - afterDiscount),
   };
 }

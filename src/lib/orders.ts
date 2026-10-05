@@ -13,19 +13,20 @@ export function generateOrderNumber(): string {
 }
 
 /**
- * Which payment options can be offered right now. Orders are only accepted
+ * Which payment options checkout can offer right now. Orders are only accepted
  * when they can actually reach the store: saved to the database, or at least
- * emailed to the store. Local development falls back to logging.
+ * emailed to the store.
  */
 export function checkoutCapabilities() {
   const database = isDatabaseConfigured();
   const emailNotify = isEmailConfigured();
-  const development = process.env.NODE_ENV !== 'production';
   return {
     // The webhook secret is required too: it's how a payment still gets
     // recorded if the customer closes the tab before returning from UPI.
     online: database && isRazorpayConfigured() && Boolean(process.env.RAZORPAY_WEBHOOK_SECRET),
-    cod: database || emailNotify || development,
+    // The store doesn't offer Cash on Delivery: orders go to WhatsApp, where
+    // the store confirms them and arranges payment.
+    cod: false,
     database,
     emailNotify,
   };

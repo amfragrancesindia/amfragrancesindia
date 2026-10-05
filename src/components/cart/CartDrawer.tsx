@@ -5,11 +5,14 @@ import Link from 'next/link';
 import { ShoppingBag, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { Drawer } from '@/components/layout/Drawer';
-import { ButtonLink } from '@/components/ui/Button';
+import { ButtonLink, buttonVariants } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
-import { formatPrice } from '@/lib/utils';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
+import { site } from '@/lib/site';
+import { cn, formatPrice } from '@/lib/utils';
+import { cartOrderMessage } from '@/lib/whatsapp';
 import { CatalogErrorNotice } from './CatalogErrorNotice';
-import { FreeShippingMeter } from './FreeShippingMeter';
 
 export function CartDrawer() {
   const { drawerOpen, closeDrawer, hydrated, catalogError, itemCount, lines, totals, updateQuantity, removeItem } = useCart();
@@ -37,9 +40,6 @@ export function CartDrawer() {
         </div>
       ) : (
         <>
-          <div className="border-b border-line px-5 py-4">
-            <FreeShippingMeter remaining={totals.amountToFreeShipping} />
-          </div>
           <ul className="flex-1 divide-y divide-line overflow-y-auto px-5">
             {lines.map((line) => (
               <li key={line.key} className="flex gap-4 py-4">
@@ -82,14 +82,22 @@ export function CartDrawer() {
               <span className="text-ink/75">Subtotal</span>
               <span className="text-lg font-semibold">{formatPrice(totals.subtotal)}</span>
             </div>
-            <p className="text-xs text-muted">Inclusive of all taxes. Shipping and coupons are applied at checkout.</p>
-            <div className="grid grid-cols-2 gap-3 pt-1">
+            <p className="text-xs text-muted">Inclusive of all taxes. Have a coupon? Add it in your cart.</p>
+            <WhatsAppOrderLink
+              message={cartOrderMessage(lines, totals)}
+              className={cn(buttonVariants(), 'w-full bg-[#25D366] text-white hover:bg-[#1DA851]')}
+            >
+              <WhatsAppIcon className="h-5 w-5 shrink-0" /> Order on WhatsApp
+            </WhatsAppOrderLink>
+            <div className={cn('grid gap-3', site.onlinePayments && 'grid-cols-2')}>
               <ButtonLink href="/cart" variant="outline" onClick={closeDrawer}>
                 View cart
               </ButtonLink>
-              <ButtonLink href="/checkout" onClick={closeDrawer}>
-                Checkout
-              </ButtonLink>
+              {site.onlinePayments && (
+                <ButtonLink href="/checkout" variant="dark" onClick={closeDrawer}>
+                  Pay online
+                </ButtonLink>
+              )}
             </div>
           </div>
         </>

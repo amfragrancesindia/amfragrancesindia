@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/faq' },
 };
 
-const free = `₹${site.shipping.freeThreshold.toLocaleString('en-IN')}`;
 const welcome = COUPONS.WELCOME10;
 
 const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> = [
@@ -23,11 +22,10 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
         q: 'How long does delivery take?',
         a: `Orders are dispatched within ${site.shipping.dispatch}. Delivery usually takes ${site.shipping.metroDelivery} in metro cities and ${site.shipping.delivery} elsewhere in India.`,
       },
-      { q: 'Is shipping free?', a: `Shipping is free on orders above ${free}. A flat fee of ₹${site.shipping.fee} applies to smaller orders.` },
       { q: 'Do you ship outside India?', a: 'At the moment we deliver only within India.' },
       {
         q: 'How can I track my order?',
-        a: 'We email you a tracking number as soon as your parcel ships. If you ordered while signed in, you can also see it under My Account → Orders.',
+        a: 'We send you the tracking number on WhatsApp as soon as your parcel ships.',
       },
       {
         q: 'Can I change or cancel my order?',
@@ -41,11 +39,11 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
       {
         q: 'Which payment methods do you accept?',
         a: site.onlinePayments
-          ? 'You can pay online by UPI, debit or credit card, net banking or wallet through our secure payment partner Razorpay, or choose Cash on Delivery.'
-          : 'We currently accept Cash on Delivery: pay the courier in cash or by UPI when your order arrives. Online payment by UPI and card is coming soon.',
+          ? 'You can order on WhatsApp, or pay online by UPI, debit or credit card, net banking or wallet through our secure payment partner Razorpay.'
+          : 'Orders are placed on WhatsApp: tap Buy Now on a perfume, or Order on WhatsApp in your cart. We confirm your order in the chat and share the payment details (UPI or bank transfer).',
       },
-      { q: 'Are prices inclusive of GST?', a: 'Yes. All prices are MRP, inclusive of all taxes. There are no hidden charges at checkout apart from shipping on orders below the free-shipping threshold.' },
-      { q: 'Do you have a discount code?', a: `New customers can use ${welcome.code} for ${welcome.description}. Enter it in your cart or at checkout.` },
+      { q: 'Are prices inclusive of GST?', a: 'Yes. All prices are MRP, inclusive of all taxes, with no hidden charges.' },
+      { q: 'Do you have a discount code?', a: `New customers can use ${welcome.code} for ${welcome.description}. Add it in your cart before you order on WhatsApp.` },
       ...(site.onlinePayments
         ? [{ q: 'Is it safe to pay online?', a: 'Card and UPI details are entered directly on Razorpay’s secure payment page — they never pass through or get stored on our servers.' }]
         : []),
@@ -64,7 +62,7 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
       },
       {
         q: 'How long do refunds take?',
-        a: 'Once we receive and check the return, refunds are issued within 5–7 business days to the original payment method. Cash on Delivery orders are refunded by UPI or bank transfer.',
+        a: 'Once we receive and check the return, refunds are issued within 5–7 business days by UPI or bank transfer (or to the card or account you paid from online).',
       },
     ],
   },
