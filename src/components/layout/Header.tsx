@@ -8,7 +8,6 @@ import { Heart, Menu, Search, ShoppingCart, User } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { navigation } from '@/lib/site';
 import { cn } from '@/lib/utils';
-import { AnnouncementBar } from './AnnouncementBar';
 import { Logo } from './Logo';
 import { MobileMenu } from './MobileMenu';
 import { SearchOverlay } from './SearchOverlay';
@@ -55,7 +54,6 @@ export function Header() {
         Skip to content
       </a>
       <header className="fixed inset-x-0 top-0 z-40">
-        <AnnouncementBar hidden={scrolled} />
         <div
           className={cn(
             'transition-[background-color,box-shadow,color] duration-300',
@@ -141,7 +139,7 @@ export function Header() {
         </div>
       </header>
       {/* Pages other than the home hero start below the fixed header. */}
-      {!isHome && <div aria-hidden className="h-[calc(var(--header-height)+36px)]" />}
+      {!isHome && <div aria-hidden className="h-[var(--header-height)]" />}
 
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} signedIn={status === 'authenticated'} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />

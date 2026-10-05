@@ -40,11 +40,6 @@ export default function TermsPage() {
         offered, are processed securely by Razorpay.
       </p>
 
-      <h2>Coupons</h2>
-      <p>
-        Coupon codes are subject to their stated conditions (such as minimum order value and maximum discount), cannot be exchanged for
-        cash and may be withdrawn at any time.
-      </p>
 
       <h2>Shipping, returns and refunds</h2>
       <p>

@@ -12,7 +12,6 @@ import { site } from '@/lib/site';
 import { cn, formatPrice } from '@/lib/utils';
 import { cartOrderMessage } from '@/lib/whatsapp';
 import { CatalogErrorNotice } from './CatalogErrorNotice';
-import { CouponForm } from './CouponForm';
 import { OrderTotals } from './OrderTotals';
 
 export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
@@ -98,9 +97,6 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
       <aside className="rounded-2xl bg-cream p-6 lg:sticky lg:top-[calc(var(--header-height)+24px)]" aria-label="Order summary">
         <h2 className="text-lg font-semibold">Order Summary</h2>
         <div className="mt-5">
-          <CouponForm />
-        </div>
-        <div className="mt-6">
           <OrderTotals totals={totals} />
         </div>
         <WhatsAppLink

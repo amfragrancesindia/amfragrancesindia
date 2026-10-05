@@ -82,7 +82,7 @@ export function CartDrawer() {
               <span className="text-ink/75">Subtotal</span>
               <span className="text-lg font-semibold">{formatPrice(totals.subtotal)}</span>
             </div>
-            <p className="text-xs text-muted">Inclusive of all taxes. Have a coupon? Add it in your cart.</p>
+            <p className="text-xs text-muted">Inclusive of all taxes.</p>
             <WhatsAppLink
               message={cartOrderMessage(lines, totals)}
               className={cn(buttonVariants(), 'w-full bg-[#25D366] text-white hover:bg-[#1DA851]')}

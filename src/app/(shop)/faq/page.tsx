@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { COUPONS } from '@/lib/pricing';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/faq' },
 };
 
-const welcome = COUPONS.WELCOME10;
 
 const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> = [
   {
@@ -43,7 +41,6 @@ const groups: Array<{ title: string; items: Array<{ q: string; a: string }> }> =
           : 'Orders are placed on WhatsApp: tap Buy Now on a perfume, or Order on WhatsApp in your cart. We confirm your order in the chat and share the payment details (UPI or bank transfer).',
       },
       { q: 'Are prices inclusive of GST?', a: 'Yes. All prices are MRP, inclusive of all taxes, with no hidden charges.' },
-      { q: 'Do you have a discount code?', a: `New customers can use ${welcome.code} for ${welcome.description}. Add it in your cart before you order on WhatsApp.` },
       ...(site.onlinePayments
         ? [{ q: 'Is it safe to pay online?', a: 'Card and UPI details are entered directly on Razorpay’s secure payment page — they never pass through or get stored on our servers.' }]
         : []),

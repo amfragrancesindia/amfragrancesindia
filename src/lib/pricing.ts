@@ -74,16 +74,9 @@ export interface Coupon {
   maxDiscount?: number;
 }
 
-export const COUPONS: Record<string, Coupon> = {
-  WELCOME10: {
-    code: 'WELCOME10',
-    description: '10% off orders above ₹1,999 (up to ₹1,000)',
-    type: 'percent',
-    value: 10,
-    minSubtotal: 1999,
-    maxDiscount: 1000,
-  },
-};
+// Coupon codes the cart accepts. None are offered at the moment (the cart has no coupon box), so a
+// code saved in an older cart gives no discount.
+export const COUPONS: Record<string, Coupon> = {};
 
 export function evaluateCoupon(code: string | null | undefined, subtotal: number) {
   if (!code) return { discount: 0 as number };

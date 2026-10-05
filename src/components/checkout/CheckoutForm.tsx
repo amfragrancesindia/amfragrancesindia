@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { AlertCircle, Banknote, CreditCard, Lock, ShieldCheck, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { CatalogErrorNotice } from '@/components/cart/CatalogErrorNotice';
-import { CouponForm } from '@/components/cart/CouponForm';
 import { OrderTotals } from '@/components/cart/OrderTotals';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Field, Input, Select, Textarea } from '@/components/ui/Field';
@@ -460,9 +459,6 @@ export function CheckoutForm({ cod, online, signedIn, defaultEmail, defaultName 
           ))}
         </ul>
         <div className="mt-6 border-t border-line pt-5">
-          <CouponForm />
-        </div>
-        <div className="mt-6">
           <OrderTotals totals={totals} />
         </div>
         <Button type="submit" size="lg" className="mt-6 w-full" loading={submitting}>
