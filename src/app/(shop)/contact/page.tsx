@@ -4,6 +4,7 @@ import { Clock, Instagram, Mail, MapPin } from 'lucide-react';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const channels = [
-  { Icon: WhatsAppIcon, label: 'WhatsApp', value: 'Chat with us', href: site.whatsapp },
+  { Icon: WhatsAppIcon, label: 'WhatsApp', value: '+91 75590 78077', href: site.whatsapp },
   { Icon: Mail, label: 'Email us', value: site.email, href: `mailto:${site.email}` },
   { Icon: Instagram, label: 'Instagram', value: site.social.instagramHandle, href: site.social.instagram },
   { Icon: MapPin, label: 'Based in', value: site.address },
@@ -41,13 +42,16 @@ export default function ContactPage() {
                 </span>
               </>
             );
+            const box = 'flex items-center gap-4 rounded-2xl border border-line p-4 transition hover:border-brand-light';
+            if (href === site.whatsapp) {
+              return (
+                <WhatsAppLink key={label} className={box}>
+                  {content}
+                </WhatsAppLink>
+              );
+            }
             return href ? (
-              <a
-                key={label}
-                href={href}
-                {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                className="flex items-center gap-4 rounded-2xl border border-line p-4 transition hover:border-brand-light"
-              >
+              <a key={label} href={href} {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className={box}>
                 {content}
               </a>
             ) : (

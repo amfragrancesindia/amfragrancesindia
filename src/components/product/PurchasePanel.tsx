@@ -8,7 +8,7 @@ import { Button, buttonVariants } from '@/components/ui/Button';
 import { Price } from '@/components/ui/Price';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
-import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { getVariant, type Product } from '@/lib/catalog';
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
@@ -104,7 +104,7 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
           {added ? <Check className="h-5 w-5 shrink-0" /> : <ShoppingCart className="h-5 w-5 shrink-0" />}
           {added ? 'Added' : 'Add to Cart'}
         </Button>
-        <WhatsAppOrderLink
+        <WhatsAppLink
           message={message}
           aria-disabled={!variant.inStock || undefined}
           title="Order on WhatsApp"
@@ -116,7 +116,7 @@ export function PurchasePanel({ product, compact, headingLevel = 'h1' }: Purchas
         >
           <WhatsAppIcon className="h-5 w-5 shrink-0" />
           Buy Now
-        </WhatsAppOrderLink>
+        </WhatsAppLink>
         {!compact && <WishlistButton slug={product.slug} name={product.name} variant="outline" className="shrink-0" />}
       </div>
       {!variant.inStock && <p className="mt-3 text-sm font-medium text-danger">This size is currently sold out.</p>}

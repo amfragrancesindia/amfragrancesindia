@@ -8,7 +8,7 @@ import { Drawer } from '@/components/layout/Drawer';
 import { ButtonLink, buttonVariants } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
-import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { site } from '@/lib/site';
 import { cn, formatPrice } from '@/lib/utils';
 import { cartOrderMessage } from '@/lib/whatsapp';
@@ -83,12 +83,12 @@ export function CartDrawer() {
               <span className="text-lg font-semibold">{formatPrice(totals.subtotal)}</span>
             </div>
             <p className="text-xs text-muted">Inclusive of all taxes. Have a coupon? Add it in your cart.</p>
-            <WhatsAppOrderLink
+            <WhatsAppLink
               message={cartOrderMessage(lines, totals)}
               className={cn(buttonVariants(), 'w-full bg-[#25D366] text-white hover:bg-[#1DA851]')}
             >
               <WhatsAppIcon className="h-5 w-5 shrink-0" /> Order on WhatsApp
-            </WhatsAppOrderLink>
+            </WhatsAppLink>
             <div className={cn('grid gap-3', site.onlinePayments && 'grid-cols-2')}>
               <ButtonLink href="/cart" variant="outline" onClick={closeDrawer}>
                 View cart

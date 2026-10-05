@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Clock, Instagram, Mail, MapPin } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { site } from '@/lib/site';
 import { Logo } from './Logo';
 import { NewsletterForm } from './NewsletterForm';
@@ -85,9 +86,9 @@ export function Footer() {
           <h3 className="text-[17px] font-bold">Contact Us</h3>
           <ul className="mt-4 space-y-3 text-[15px] text-white/80">
             <li>
-              <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-white">
+              <WhatsAppLink className="flex items-center gap-3 hover:text-white">
                 <WhatsAppIcon className="h-4 w-4 shrink-0" /> Chat on WhatsApp
-              </a>
+              </WhatsAppLink>
             </li>
             <li>
               <a href={`mailto:${site.email}`} className="flex items-center gap-3 break-all hover:text-white">

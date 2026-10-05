@@ -15,10 +15,10 @@ export const site = {
   ).replace(/\/$/, ''),
   email: 'luxury@amfragrancesindia.com',
   // WhatsApp Business chat link: opens a chat with the store (the number itself stays private).
-  whatsapp: 'https://wa.me/message/W4E4LAHLVOUBE1',
-  // The store's WhatsApp number with country code, digits only (e.g. '919876543210'). When set,
-  // "Buy Now" opens WhatsApp with the product, size, quantity and price already typed in.
-  whatsappNumber: '' as string,
+  whatsapp: 'https://wa.me/917559078077',
+  // The store's WhatsApp number with country code, digits only. With it, Buy Now and the cart open
+  // the WhatsApp app directly on phones, with the order already typed in ('' falls back to copying it).
+  whatsappNumber: '917559078077' as string,
   address: 'Kasaragod, Kerala, India',
   hours: 'Monday – Saturday, 10:00 AM – 7:00 PM IST',
   social: {

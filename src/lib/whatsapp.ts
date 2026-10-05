@@ -35,3 +35,13 @@ export function cartOrderMessage(
 export function whatsappOrderLink(message: string): string {
   return site.whatsappNumber ? `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}` : site.whatsapp;
 }
+
+/**
+ * Android link that opens the WhatsApp app itself (whatsapp://send) with the message typed in, rather
+ * than a wa.me page in the browser first. The browser goes to `fallback` when WhatsApp isn't installed.
+ * Needs the store's number.
+ */
+export function whatsappAndroidLink(message: string | undefined, fallback: string): string {
+  const text = message ? `&text=${encodeURIComponent(message)}` : '';
+  return `intent://send?phone=${site.whatsappNumber}${text}#Intent;scheme=whatsapp;S.browser_fallback_url=${encodeURIComponent(fallback)};end`;
+}

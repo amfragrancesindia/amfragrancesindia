@@ -7,7 +7,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { ButtonLink, buttonVariants } from '@/components/ui/Button';
 import { QuantityStepper } from '@/components/ui/QuantityStepper';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
-import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { site } from '@/lib/site';
 import { cn, formatPrice } from '@/lib/utils';
 import { cartOrderMessage } from '@/lib/whatsapp';
@@ -103,12 +103,12 @@ export function CartView({ emptyState }: { emptyState: React.ReactNode }) {
         <div className="mt-6">
           <OrderTotals totals={totals} />
         </div>
-        <WhatsAppOrderLink
+        <WhatsAppLink
           message={cartOrderMessage(lines, totals)}
           className={cn(buttonVariants({ size: 'lg' }), 'mt-6 w-full bg-[#25D366] text-white hover:bg-[#1DA851]')}
         >
           <WhatsAppIcon className="h-5 w-5 shrink-0" /> Order on WhatsApp
-        </WhatsAppOrderLink>
+        </WhatsAppLink>
         {site.onlinePayments && (
           <ButtonLink href="/checkout" variant="dark" size="lg" className="mt-3 w-full">
             <Lock className="h-4 w-4" /> Pay online

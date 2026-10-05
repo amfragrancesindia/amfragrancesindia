@@ -4,7 +4,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { buttonVariants } from '@/components/ui/Button';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
-import { WhatsAppOrderLink } from '@/components/ui/WhatsAppOrderLink';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { cn } from '@/lib/utils';
 
 interface ProductCardActionsProps {
@@ -30,10 +30,10 @@ export function ProductCardActions({ slug, variantId, name, message, className }
           <ShoppingCart className="h-4 w-4 shrink-0" />
           Add to Cart<span className="sr-only">: {name}</span>
         </button>
-        <WhatsAppOrderLink message={message} title="Order on WhatsApp" className={cn(button, 'bg-[#25D366] text-white hover:bg-[#1DA851]')}>
+        <WhatsAppLink message={message} title="Order on WhatsApp" className={cn(button, 'bg-[#25D366] text-white hover:bg-[#1DA851]')}>
           <WhatsAppIcon className="h-4 w-4 shrink-0" />
           Buy Now<span className="sr-only">: {name} on WhatsApp</span>
-        </WhatsAppOrderLink>
+        </WhatsAppLink>
       </div>
     </div>
   );

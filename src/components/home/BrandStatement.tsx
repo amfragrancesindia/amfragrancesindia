@@ -1,5 +1,6 @@
 import { ButtonLink } from '@/components/ui/Button';
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
+import { WhatsAppLink } from '@/components/ui/WhatsAppLink';
 import { site } from '@/lib/site';
 
 /** The brand line from the boxes, with a way into the shop and a way to ask a question. */
@@ -17,14 +18,9 @@ export function BrandStatement() {
           <ButtonLink href="/products" variant="dark" size="lg">
             Shop the Collection
           </ButtonLink>
-          <a
-            href={site.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-[52px] items-center justify-center gap-2 rounded-lg border border-ink/70 bg-white px-8 text-base font-medium text-ink transition-all duration-300 hover:border-ink hover:bg-ink hover:text-white"
-          >
+          <WhatsAppLink className="inline-flex h-[52px] items-center justify-center gap-2 rounded-lg border border-ink/70 bg-white px-8 text-base font-medium text-ink transition-all duration-300 hover:border-ink hover:bg-ink hover:text-white">
             <WhatsAppIcon className="h-5 w-5" /> Ask us on WhatsApp
-          </a>
+          </WhatsAppLink>
         </div>
       </div>
     </section>
